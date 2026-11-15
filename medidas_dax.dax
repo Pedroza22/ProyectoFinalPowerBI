@@ -1,0 +1,125 @@
+// =====================================================================================
+// MEDIDAS DAX - Evaluacion del Rendimiento Academico (xAPI-Edu-Data)
+// Crear en una tabla vacia llamada "_Medidas" (Inicio > Escribir datos > tabla "_Medidas")
+// Relaciones (todas 1:* con filtro de la dimension hacia la tabla de hechos, direccion unica):
+//   Dim_Facultad[SK_Facultad]   -> Fact_Desempeno[SK_Facultad]
+//   Dim_Programa[SK_Programa]   -> Fact_Desempeno[SK_Programa]
+//   Dim_Materia[SK_Materia]     -> Fact_Desempeno[SK_Materia]
+//   Dim_Semestre[SK_Semestre]   -> Fact_Desempeno[SK_Semestre]
+//   Dim_Cohorte[SK_Cohorte]     -> Fact_Desempeno[SK_Cohorte]
+//   Dim_Genero[SK_Genero]       -> Fact_Desempeno[SK_Genero]
+//   Dim_Estudiante[ID_Estudiante] -> Fact_Desempeno[ID_Estudiante]  (1:1, opcional)
+// Ordenar por columna:
+//   Dim_Semestre[Semestre]            por Dim_Semestre[Semestre_Orden]
+//   Fact_Desempeno[Nivel_Rendimiento] por Fact_Desempeno[Nota_Ordinal]
+// =====================================================================================
+
+// ---------- 1. Base ----------
+Total Estudiantes = DISTINCTCOUNT ( Fact_Desempeno[ID_Estudiante] )
+
+Promedio Nota = AVERAGE ( Fact_Desempeno[Nota_Aproximada] )
+
+Promedio Nivel Ordinal = AVERAGE ( Fact_Desempeno[Nota_Ordinal] )
+
+Promedio Nota Global =
+CALCULATE ( [Promedio Nota], ALL ( Dim_Materia ), ALL ( Dim_Programa ), ALL ( Dim_Facultad ),
+            ALL ( Dim_Semestre ), ALL ( Dim_Cohorte ), ALL ( Dim_Genero ) )
+
+Diferencia vs Promedio Global = [Promedio Nota] - [Promedio Nota Global]
+
+// ---------- 2. Req. 1 y 5: promedio por materia/semestre y tendencia ----------
+Promedio Nota Semestre 1 =
+CALCULATE ( [Promedio Nota], Dim_Semestre[Semestre_Orden] = 1 )
+
+Promedio Nota Semestre 2 =
+CALCULATE ( [Promedio Nota], Dim_Semestre[Semestre_Orden] = 2 )
+
+Variacion Semestral =
+VAR s1 = [Promedio Nota Semestre 1]
+VAR s2 = [Promedio Nota Semestre 2]
+RETURN IF ( NOT ISBLANK ( s1 ) && NOT ISBLANK ( s2 ), s2 - s1 )
+
+Tendencia Texto =
+VAR v = [Variacion Semestral]
+RETURN SWITCH ( TRUE (), ISBLANK ( v ), "Sin datos", v > 1, "▲ Mejora", v < -1, "▼ Deterioro", "● Estable" )
+
+// ---------- 3. Req. 2: desercion (PROXY: rendimiento Bajo + 7 o mas ausencias) ----------
+Estudiantes en Riesgo de Desercion = SUM ( Fact_Desempeno[Es_Riesgo_Desercion] )
+
+Tasa Desercion =
+DIVIDE ( [Estudiantes en Riesgo de Desercion], [Total Estudiantes], 0 )
+
+// ---------- 4. Req. 3: genero ----------
+Promedio Nota Femenino = CALCULATE ( [Promedio Nota], Dim_Genero[Genero] = "Femenino" )
+Promedio Nota Masculino = CALCULATE ( [Promedio Nota], Dim_Genero[Genero] = "Masculino" )
+Brecha de Genero (F - M) = [Promedio Nota Femenino] - [Promedio Nota Masculino]
+
+// ---------- 5. Req. 6: reprobacion (Nivel Bajo = reprobado) ----------
+Estudiantes Reprobados = SUM ( Fact_Desempeno[Es_Reprobado] )
+
+Tasa Reprobacion = DIVIDE ( [Estudiantes Reprobados], [Total Estudiantes], 0 )
+
+Ranking Reprobacion Materia =
+IF ( HASONEVALUE ( Dim_Materia[Materia] ),
+     RANKX ( ALL ( Dim_Materia[Materia] ), [Tasa Reprobacion], , DESC, DENSE ) )
+// En el visual de barras: Filtro del visual > Materia > Top N = 10 por [Tasa Reprobacion]
+
+// ---------- 6. Req. 7: asistencia vs rendimiento ----------
+Estudiantes Asistencia Alta =
+CALCULATE ( [Total Estudiantes], Fact_Desempeno[Ausencias_Codigo] = "Under-7" )
+
+Pct Asistencia Alta = DIVIDE ( [Estudiantes Asistencia Alta], [Total Estudiantes], 0 )
+
+Promedio Nota Asistencia Alta =
+CALCULATE ( [Promedio Nota], Fact_Desempeno[Ausencias_Codigo] = "Under-7" )
+
+Promedio Nota Asistencia Baja =
+CALCULATE ( [Promedio Nota], Fact_Desempeno[Ausencias_Codigo] = "Above-7" )
+
+Efecto Asistencia (puntos) = [Promedio Nota Asistencia Alta] - [Promedio Nota Asistencia Baja]
+
+// ---------- 7. Req. 8: sobresalientes ----------
+Estudiantes Sobresalientes = SUM ( Fact_Desempeno[Es_Sobresaliente] )
+
+Pct Sobresalientes = DIVIDE ( [Estudiantes Sobresalientes], [Total Estudiantes], 0 )
+
+// ---------- 8. Req. 4 y 9: comparativas (programa / cohorte) ----------
+Distribucion Nivel % =
+DIVIDE ( COUNTROWS ( Fact_Desempeno ),
+         CALCULATE ( COUNTROWS ( Fact_Desempeno ), ALLEXCEPT ( Fact_Desempeno, Fact_Desempeno[SK_Programa] ) ) )
+// Para cohortes: reemplaza SK_Programa por SK_Cohorte. Usar en barras 100% apiladas por Nivel_Rendimiento.
+
+Ranking Programa =
+IF ( HASONEVALUE ( Dim_Programa[Programa] ),
+     RANKX ( ALL ( Dim_Programa[Programa] ), [Promedio Nota], , DESC, DENSE ) )
+
+// ---------- 9. Req. 10: factores de exito ----------
+Promedio Manos Levantadas = AVERAGE ( Fact_Desempeno[Manos_Levantadas] )
+Promedio Recursos Visitados = AVERAGE ( Fact_Desempeno[Recursos_Visitados] )
+Promedio Anuncios Vistos = AVERAGE ( Fact_Desempeno[Anuncios_Vistos] )
+Promedio Participacion Foros = AVERAGE ( Fact_Desempeno[Participacion_Foros] )
+Promedio Indice Participacion = AVERAGE ( Fact_Desempeno[Indice_Participacion] )
+
+// Correlacion de Pearson entre una metrica de participacion y la nota ordinal (cambia la columna X segun el factor)
+Correlacion Participacion vs Nota =
+VAR n = COUNTROWS ( Fact_Desempeno )
+VAR mx = AVERAGE ( Fact_Desempeno[Indice_Participacion] )
+VAR my = AVERAGE ( Fact_Desempeno[Nota_Ordinal] )
+VAR cov = SUMX ( Fact_Desempeno, ( Fact_Desempeno[Indice_Participacion] - mx ) * ( Fact_Desempeno[Nota_Ordinal] - my ) )
+VAR sx = SQRT ( SUMX ( Fact_Desempeno, ( Fact_Desempeno[Indice_Participacion] - mx ) ^ 2 ) )
+VAR sy = SQRT ( SUMX ( Fact_Desempeno, ( Fact_Desempeno[Nota_Ordinal] - my ) ^ 2 ) )
+RETURN DIVIDE ( cov, sx * sy )
+
+Pct Alto Rendimiento por Rango Participacion =
+DIVIDE ( [Estudiantes Sobresalientes], [Total Estudiantes], 0 )
+// Usar con Fact_Desempeno[Rango_Participacion] en el eje X (linea/columna)
+
+// ---------- 10. Titulos dinamicos y formato condicional ----------
+Titulo Materia =
+"Promedio de nota por materia | " &
+IF ( ISFILTERED ( Dim_Semestre[Semestre] ),
+     SELECTEDVALUE ( Dim_Semestre[Semestre], "varios semestres" ), "ambos semestres" )
+
+Color Semaforo Reprobacion =
+SWITCH ( TRUE (), [Tasa Reprobacion] >= 0.40, "#C0392B", [Tasa Reprobacion] >= 0.25, "#E6A117", "#2E8B57" )
+// Formato condicional > Color de fondo > Valor de campo > [Color Semaforo Reprobacion]
