@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="EduMetrics – Observatorio Inteligente del Rendimiento Académico. Tablero interactivo Power BI y documentación técnica completa.">
+<title>EduMetrics – Observatorio Académico</title>
+<style>
+/* ============================================================
+   RESET Y VARIABLES
+   ============================================================ */
+:root {
+  --p:#0f172a; --ps:#1e293b; --acc:#1d4ed8; --acc2:#1e40af;
+  --accl:#eff6ff; --bg:#f8fafc; --sur:#fff; --bdr:#e2e8f0;
+  --txt:#1e293b; --mut:#475569;
+  --navy:#17324d; --blue:#16809a; --blue2:#e8f4f7; --ink:#263746;
+  --line:#dce5ec; --orange:#e98a28; --red:#c84438; --green:#27875b;
+  --shadow:0 12px 32px rgba(23,50,77,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.6}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ============================================================
+   SISTEMA DE PÁGINAS
+   ============================================================ */
+.page { display:none; min-height:100vh; flex-direction:column; }
+.page.active { display:flex; }
+
+/* ============================================================
+   BARRA DE NAVEGACIÓN SUPERIOR (ambas páginas)
+   ============================================================ */
+.topbar {
+  background:var(--p); color:#fff;
+  padding:12px 40px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.topbar .brand { font-size:.95rem; font-weight:700; letter-spacing:-.01em; color:#fff; }
+.topbar .brand span { color:#93c5fd; }
+.topbar nav { display:flex; gap:8px; }
+.topbar nav button {
+  background:transparent; border:1px solid #ffffff44; color:#cbd5e1;
+  padding:7px 16px; border-radius:6px; font-size:.82rem; cursor:pointer;
+  transition:.15s;
+}
+.topbar nav button:hover, .topbar nav button.active-tab {
+  background:#ffffff18; color:#fff; border-color:#ffffff88;
+}
+.topbar nav button.cta {
+  background:var(--acc); border-color:var(--acc); color:#fff;
+}
+.topbar nav button.cta:hover { background:var(--acc2); }
+
+/* ============================================================
+   PÁGINA 1 — LANDING
+   ============================================================ */
+#p1 { background:var(--bg); }
+
+.p1-hero {
+  background:linear-gradient(135deg,#0a1628,#0f2d4a,#122444);
+  color:#fff; padding:64px 40px 56px;
+}
+.p1-hero-inner { max-width:1280px; margin:0 auto; }
+.p1-badge {
+  font-size:.72rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.1em; color:#93c5fd; margin-bottom:10px; display:block;
+}
+.p1-hero h1 {
+  font-size:clamp(1.8rem,4vw,3rem); font-weight:800;
+  letter-spacing:-.03em; line-height:1.1; margin-bottom:14px;
+}
+.p1-hero p { max-width:760px; color:#cbd5e1; font-size:1rem; margin-bottom:28px; }
+.p1-hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+.p1-btn-primary {
+  background:var(--acc); color:#fff; border:none;
+  padding:12px 26px; border-radius:7px; font-size:.9rem; font-weight:600;
+  cursor:pointer; transition:.15s;
+}
+.p1-btn-primary:hover { background:var(--acc2); }
+.p1-btn-secondary {
+  background:transparent; color:#cbd5e1; border:1px solid #ffffff44;
+  padding:12px 26px; border-radius:7px; font-size:.9rem; font-weight:500;
+  cursor:pointer; transition:.15s;
+}
+.p1-btn-secondary:hover { background:#ffffff11; color:#fff; }
+
+.p1-main { flex:1; max-width:1280px; margin:0 auto; padding:36px 24px; width:100%; display:flex; flex-direction:column; gap:28px; }
+
+.p1-value {
+  background:var(--sur); border:1px solid var(--bdr);
+  border-left:4px solid var(--acc); border-radius:6px;
+  padding:28px 32px; box-shadow:0 1px 3px rgba(15,23,42,.04);
+}
+.p1-value .sec-label {
+  font-size:.72rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--acc); margin-bottom:6px; display:block;
+}
+.p1-value h2 { font-size:1.3rem; font-weight:600; color:var(--p); margin-bottom:12px; }
+.p1-value p  { color:var(--mut); font-size:.96rem; }
+
+.p1-pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.p1-pillar {
+  background:var(--sur); border:1px solid var(--bdr); border-radius:6px;
+  padding:24px; box-shadow:0 1px 2px rgba(15,23,42,.03);
+}
+.p1-pillar h3 { font-size:1rem; font-weight:600; color:var(--p); margin-bottom:8px; }
+.p1-pillar p  { font-size:.9rem; color:var(--mut); }
+
+.p1-report {
+  background:var(--sur); border:1px solid var(--bdr); border-radius:8px;
+  padding:24px; box-shadow:0 1px 3px rgba(15,23,42,.06);
+}
+.p1-toolbar {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--bdr);
+}
+.p1-toolbar-title { font-size:1rem; font-weight:600; color:var(--p); }
+.p1-toolbar-sub   { font-size:.83rem; color:var(--mut); margin-top:2px; }
+.p1-btn-fs {
+  background:var(--acc); color:#fff; border:none;
+  padding:9px 18px; font-size:.85rem; font-weight:500; border-radius:6px;
+  cursor:pointer; transition:.15s; white-space:nowrap;
+}
+.p1-btn-fs:hover { background:var(--acc2); }
+.iframe-wrap {
+  position:relative; width:100%; padding-bottom:62.25%; height:0; overflow:hidden;
+  border:1px solid var(--bdr); border-radius:4px; background:#f1f5f9;
+}
+.iframe-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+
+.p1-cta {
+  background:var(--p); color:#fff; border-radius:6px;
+  padding:28px 32px; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+}
+.p1-cta p { font-size:1rem; font-weight:500; color:#f1f5f9; }
+.p1-cta button {
+  background:var(--acc); color:#fff; border:none;
+  padding:12px 28px; border-radius:7px; font-size:.9rem; font-weight:600;
+  cursor:pointer; transition:.15s;
+}
+.p1-cta button:hover { background:var(--acc2); }
+
+.p1-footer {
+  text-align:center; padding:22px; font-size:.82rem; color:var(--mut);
+  border-top:1px solid var(--bdr); background:var(--sur); margin-top:8px;
+}
+
+/* ============================================================
+   PÁGINA 2 — DOCUMENTACIÓN TÉCNICA
+   ============================================================ */
+#p2 { background:var(--bg); }
+
+.p2-hero {
+  background:linear-gradient(125deg,#102b45,#176d84);
+  color:#fff; padding:52px max(22px,calc((100% - 1180px)/2)) 44px;
+}
+.p2-eyebrow {
+  font-size:.76rem; letter-spacing:.15em; text-transform:uppercase;
+  color:#bce5ed; font-weight:700; margin-bottom:12px; display:block;
+}
+.p2-hero h1 { font-size:clamp(2rem,4vw,3.2rem); line-height:1.05; margin-bottom:12px; }
+.p2-hero p  { max-width:780px; color:#e0edf2; font-size:1.05rem; }
+.pills { display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+.pill  { border:1px solid #ffffff55; border-radius:99px; padding:5px 12px; font-size:.8rem; color:#fff; }
+
+.p2-layout {
+  max-width:1240px; margin:auto; padding:28px 22px;
+  display:grid; grid-template-columns:250px minmax(0,1fr); gap:26px;
+}
+.p2-nav {
+  position:sticky; top:70px; align-self:start;
+  background:#fff; border:1px solid var(--line); border-radius:15px;
+  padding:18px; box-shadow:var(--shadow);
+  max-height:calc(100vh - 90px); overflow:auto;
+}
+.p2-nav strong { display:block; color:var(--navy); margin-bottom:10px; font-size:.9rem; }
+.p2-nav a {
+  display:block; padding:6px 9px; border-radius:8px;
+  color:#536779; font-size:.87rem;
+}
+.p2-nav a:hover { background:var(--blue2); text-decoration:none; color:var(--navy); }
+
+.p2-main { min-width:0; }
+section.doc {
+  background:#fff; border:1px solid var(--line); border-radius:16px;
+  padding:clamp(18px,3vw,30px); margin-bottom:22px;
+  box-shadow:var(--shadow); scroll-margin-top:70px;
+}
+h2.dh2 { font-size:1.6rem; color:var(--navy); margin-bottom:14px; line-height:1.2; }
+h3.dh3 { font-size:1.08rem; color:var(--navy); margin:22px 0 7px; }
+h4.dh4 { color:var(--navy); margin:16px 0 5px; }
+p.dp   { margin:7px 0 12px; }
+.lead  { font-size:1.05rem; color:#52687b; }
+.small { font-size:.87rem; color:var(--mut); }
+.kicker{ font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:var(--blue); font-weight:800; margin-bottom:6px; display:block; }
+
+.dgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.dgrid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.dcard { background:#f8fbfd; border:1px solid var(--line); border-radius:12px; padding:15px; }
+.dcard b { color:var(--navy); }
+.metric { font-size:1.85rem; font-weight:750; color:var(--navy); line-height:1.2; }
+.dlabel { font-size:.78rem; color:var(--mut); text-transform:uppercase; letter-spacing:.06em; }
+
+.callout { border-left:4px solid var(--blue); background:#eef7fa; padding:13px 16px; border-radius:0 10px 10px 0; margin:14px 0; }
+.callout.warning { border-left-color:var(--orange); background:#fff7eb; }
+.callout.danger  { border-left-color:var(--red);    background:#fff2f0; }
+.callout.success { border-left-color:var(--green);  background:#eff9f3; }
+
+table { border-collapse:collapse; width:100%; margin:12px 0 16px; font-size:.91rem; }
+th,td { border-bottom:1px solid var(--line); padding:9px 10px; text-align:left; vertical-align:top; }
+th    { background:#edf4f7; color:var(--navy); font-weight:700; }
+tr:last-child td { border-bottom:0; }
+.tag  { display:inline-block; padding:2px 7px; border-radius:99px; background:#e7f2f6; color:#17677c; font-size:.73rem; font-weight:700; }
+
+ul,ol { padding-left:20px; }
+li    { margin:4px 0; }
+
+details { border:1px solid var(--line); border-radius:11px; margin:9px 0; overflow:hidden; }
+summary { cursor:pointer; padding:12px 15px; background:#f8fbfd; color:var(--navy); font-weight:700; }
+details .inside { padding:4px 15px 14px; }
+
+.question { border:1px solid var(--line); border-radius:12px; padding:16px; margin:11px 0; }
+.question h3 { margin:0 0 7px; font-size:1.05rem; color:var(--navy); }
+
+pre {
+  white-space:pre-wrap; word-break:break-word;
+  background:#142b40; color:#e5f3f7;
+  padding:15px; border-radius:10px; overflow:auto; font-size:.84rem;
+  margin:10px 0;
+}
+
+.p2-actions { display:flex; gap:10px; flex-wrap:wrap; margin:16px 0 28px; }
+.p2-actions button {
+  border:0; border-radius:9px; background:var(--navy); color:#fff;
+  padding:10px 15px; font-weight:700; cursor:pointer; font-size:.88rem;
+}
+.p2-actions button.secondary { background:#e7f0f4; color:var(--navy); }
+
+.p2-footer { text-align:center; padding:24px; color:#718292; font-size:.83rem; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:900px){
+  .p1-pillars { grid-template-columns:1fr; }
+  .p2-layout  { grid-template-columns:1fr; }
+  .p2-nav     { position:relative; top:auto; max-height:none; }
+  .dgrid.three{ grid-template-columns:1fr 1fr; }
+}
+@media(max-width:640px){
+  .p1-hero,.p2-hero { padding:40px 20px; }
+  .topbar { padding:10px 16px; }
+  .topbar .brand { font-size:.82rem; }
+  .topbar nav button { padding:6px 10px; font-size:.75rem; }
+  .p1-toolbar { flex-direction:column; align-items:flex-start; gap:10px; }
+  .dgrid,.dgrid.three { grid-template-columns:1fr; }
+}
+@media print {
+  .topbar,.p1-hero-btns,.p2-actions { display:none!important; }
+  .page { display:flex!important; }
+  #p1   { display:none!important; }
+  .p2-layout { display:block; }
+  .p2-nav { display:none; }
+  section.doc { box-shadow:none; break-inside:avoid; border:0; border-bottom:1px solid #ddd; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     BARRA SUPERIOR (siempre visible)
+     ============================================================ -->
+<div class="topbar">
+  <span class="brand">Edu<span>Metrics</span> · Observatorio Académico</span>
+  <nav>
+    <button onclick="irA('p1')" id="tab-p1" class="active-tab">🏠 Inicio</button>
+    <button onclick="irA('p2')" id="tab-p2">📋 Documentación técnica</button>
+  </nav>
+</div>
+
+<!-- ============================================================
+     PÁGINA 1 — LANDING
+     ============================================================ -->
+<div id="p1" class="page active">
+
+  <div class="p1-hero">
+    <div class="p1-hero-inner">
+      <span class="p1-badge">Prototipo de Inteligencia de Negocios</span>
+      <h1>EduMetrics<br>Observatorio Inteligente del<br>Rendimiento Académico</h1>
+      <p>Transforma datos educativos en información visual y estadística para apoyar decisiones académicas.</p>
+      <div class="p1-hero-btns">
+        <button class="p1-btn-primary" onclick="document.getElementById('tablero-section').scrollIntoView({behavior:'smooth'})">
+          Ver tablero ↓
+        </button>
+        <button class="p1-btn-secondary" onclick="irA('p2')">
+          Ver documentación técnica →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="p1-main">
+
+    <!-- Propuesta de valor -->
+    <section class="p1-value">
+      <span class="sec-label">Propuesta de Valor</span>
+      <h2>Transformamos datos académicos en decisiones que impulsan el aprendizaje.</h2>
+      <p>Las instituciones educativas generan información sobre el desempeño, la asistencia y la participación de sus estudiantes, pero esos datos no siempre se convierten en decisiones oportunas. EduMetrics centraliza y analiza esa información mediante un tablero interactivo de inteligencia de negocios.</p>
+    </section>
+
+    <!-- Pilares -->
+    <div class="p1-pillars">
+      <div class="p1-pillar">
+        <h3>Comparación Multidimensional</h3>
+        <p>Comparamos el rendimiento por materia, semestre, nivel, género y sección, identificando asignaturas con mayores porcentajes en nivel bajo y grupos con resultados sobresalientes.</p>
+      </div>
+      <div class="p1-pillar">
+        <h3>Correlación de Factores</h3>
+        <p>Exploramos la relación entre la asistencia, la participación en la plataforma virtual y el desempeño académico final de los estudiantes.</p>
+      </div>
+      <div class="p1-pillar">
+        <h3>Rigor Estadístico y Alertas</h3>
+        <p>Incorporamos ANOVA, Tukey, Kruskal-Wallis y chi-cuadrado para evaluar si las diferencias entre grupos tienen evidencia estadística, con correlación de Pearson calculada en DAX.</p>
+      </div>
+    </div>
+
+    <!-- KPIs rápidos -->
+    <div class="p1-pillars">
+      <div class="p1-pillar" style="text-align:center;border-top:3px solid #1d4ed8;">
+        <div style="font-size:2.2rem;font-weight:800;color:#0f172a;">480</div>
+        <div style="font-size:.78rem;color:#475569;text-transform:uppercase;letter-spacing:.06em;">Estudiantes</div>
+      </div>
+      <div class="p1-pillar" style="text-align:center;border-top:3px solid #e53935;">
+        <div style="font-size:2.2rem;font-weight:800;color:#0f172a;">26,5%</div>
+        <div style="font-size:.78rem;color:#475569;text-transform:uppercase;letter-spacing:.06em;">Reprobación</div>
+      </div>
+      <div class="p1-pillar" style="text-align:center;border-top:3px solid #2e7d32;">
+        <div style="font-size:2.2rem;font-weight:800;color:#0f172a;">0,70</div>
+        <div style="font-size:.78rem;color:#475569;text-transform:uppercase;letter-spacing:.06em;">Correlación participación</div>
+      </div>
+    </div>
+
+    <!-- Tablero Power BI -->
+    <section class="p1-report" id="tablero-section">
+      <div class="p1-toolbar">
+        <div>
+          <div class="p1-toolbar-title">Tablero Interactivo de Rendimiento Académico</div>
+          <div class="p1-toolbar-sub">Use los filtros internos del panel para explorar indicadores por grupo y asignatura</div>
+        </div>
+        <button class="p1-btn-fs" onclick="irPantallaCompleta()">⛶ Pantalla completa</button>
+      </div>
+      <div class="iframe-wrap">
+        <iframe
+          id="powerbi-frame"
+          title="Rendimiento Académico — EduMetrics"
+          src="https://app.powerbi.com/view?r=eyJrIjoiMTE0NGRmOWEtMDc2ZS00M2RmLWJjMDYtMzM3MzM1NDI5YzI4IiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9"
+          allowfullscreen="true">
+        </iframe>
+      </div>
+    </section>
+
+    <!-- CTA documentación -->
+    <div class="p1-cta">
+      <p>EduMetrics no busca reemplazar la decisión de docentes o directivos: busca darles evidencia organizada para tomarla mejor.</p>
+      <button onclick="irA('p2')">Ver documentación técnica completa →</button>
+    </div>
+
+  </div>
+
+  <footer class="p1-footer">
+    EduMetrics – Observatorio Académico &nbsp;·&nbsp;
+    Python · pandas · numpy · scipy · statsmodels · Power BI · DAX · PostgreSQL · Docker · Vercel
+  </footer>
+
+</div><!-- /p1 -->
+
+
+<!-- ============================================================
+     PÁGINA 2 — DOCUMENTACIÓN TÉCNICA
+     ============================================================ -->
+<div id="p2" class="page">
+
+  <div class="p2-hero">
+    <span class="p2-eyebrow">Documentación del proyecto · Business Intelligence</span>
+    <h1>EduMetrics<br>Observatorio Académico</h1>
+    <p>De los datos educativos a decisiones informadas: análisis del rendimiento, asistencia, participación y factores asociados al desempeño estudiantil mediante Power BI y validación estadística.</p>
+    <div class="pills">
+      <span class="pill">Power BI</span>
+      <span class="pill">ETL · Python</span>
+      <span class="pill">DAX</span>
+      <span class="pill">ANOVA y pruebas estadísticas</span>
+      <span class="pill">pandas · numpy · scipy · statsmodels</span>
+      <span class="pill">PostgreSQL · Docker</span>
+      <span class="pill">480 registros</span>
+    </div>
+  </div>
+
+  <div class="p2-layout">
+
+    <!-- Sidebar navegación -->
+    <nav class="p2-nav" aria-label="Índice del documento">
+      <strong>Contenido</strong>
+      <a href="#s-pitch">1. Pitch del proyecto</a>
+      <a href="#s-problema">2. Problema y objetivo</a>
+      <a href="#s-datos">3. Datos utilizados</a>
+      <a href="#s-etl">4. Proceso ETL</a>
+      <a href="#s-herramientas">5. Herramientas y librerías</a>
+      <a href="#s-modelo">6. Modelo de datos</a>
+      <a href="#s-dax">7. DAX y consultas</a>
+      <a href="#s-preguntas">8. Las 10 preguntas</a>
+      <a href="#s-dashboard">9. Páginas del tablero</a>
+      <a href="#s-tablero">10. Tablero en vivo</a>
+      <a href="#s-estadistica">11. ANOVA y validación</a>
+      <a href="#s-hallazgos">12. Hallazgos</a>
+      <a href="#s-limitaciones">13. Limitaciones</a>
+      <a href="#s-guion">14. Guion para sustentar</a>
+      <a href="#s-glosario">15. Glosario</a>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="p2-main">
+
+      <!-- 1. PITCH -->
+      <section class="doc" id="s-pitch">
+        <span class="kicker">Presentación comercial</span>
+        <h2 class="dh2">1. Pitch: ¿cómo vendemos el proyecto?</h2>
+        <p class="lead dp"><b>EduMetrics – Observatorio Inteligente del Rendimiento Académico</b> es un prototipo de inteligencia de negocios que transforma datos educativos en información visual y estadística para apoyar decisiones académicas.</p>
+        <div class="callout success"><b>Propuesta de valor:</b> Transformamos datos académicos en decisiones que impulsan el aprendizaje.</div>
+        <h3 class="dh3">Pitch de 60–90 segundos</h3>
+        <p class="dp">Las instituciones educativas generan información sobre el desempeño, la asistencia y la participación de sus estudiantes, pero esos datos no siempre se convierten en decisiones oportunas. EduMetrics propone centralizar y analizar esa información mediante un tablero interactivo de inteligencia de negocios.</p>
+        <p class="dp">Con el Observatorio Académico podemos comparar el rendimiento por materia, semestre, nivel, género y sección; identificar asignaturas con mayores porcentajes de nivel bajo; reconocer grupos sobresalientes; y explorar la relación entre asistencia, participación y desempeño.</p>
+        <p class="dp"><b>EduMetrics no busca reemplazar la decisión de docentes o directivos: busca darles evidencia organizada para tomarla mejor.</b></p>
+        <div class="dgrid three" style="margin-top:14px;">
+          <div class="dcard"><div class="dlabel">Problema</div><b>Datos dispersos</b><p class="small dp">Cuesta identificar patrones y grupos que requieren atención.</p></div>
+          <div class="dcard"><div class="dlabel">Solución</div><b>Tablero interactivo</b><p class="small dp">Indicadores, filtros, comparaciones y análisis estadístico.</p></div>
+          <div class="dcard"><div class="dlabel">Beneficio</div><b>Decisiones informadas</b><p class="small dp">Priorizar seguimiento, apoyo y revisión de asignaturas.</p></div>
+        </div>
+        <p class="small dp" style="margin-top:12px;">Posicionamiento honesto: se trata de un prototipo académico construido con un conjunto de datos público y adaptado; no es todavía un producto desplegado ni validado con datos institucionales reales.</p>
+      </section>
+
+      <!-- 2. PROBLEMA -->
+      <section class="doc" id="s-problema">
+        <span class="kicker">Contexto</span>
+        <h2 class="dh2">2. Problema, objetivo y alcance</h2>
+        <h3 class="dh3">Problema que se aborda</h3>
+        <p class="dp">La información de rendimiento, ausencias y actividad en plataformas educativas puede ser difícil de interpretar cuando se encuentra en registros separados o en tablas sin análisis integrado. Esto limita la identificación de patrones, diferencias entre grupos y señales que ameritan seguimiento.</p>
+        <h3 class="dh3">Objetivo general</h3>
+        <p class="dp">Implementar un flujo de análisis de datos que integre ETL, modelado semántico, visualización en Power BI y validación estadística para explorar el rendimiento estudiantil y los factores asociados.</p>
+        <h3 class="dh3">Objetivos específicos</h3>
+        <ul>
+          <li>Preparar y organizar los registros del conjunto de datos educativo.</li>
+          <li>Construir un modelo dimensional que facilite el análisis por diferentes categorías.</li>
+          <li>Crear medidas DAX para indicadores, comparaciones, rankings y asociaciones.</li>
+          <li>Responder diez preguntas de análisis mediante visualizaciones del dashboard.</li>
+          <li>Complementar el análisis descriptivo con pruebas estadísticas e interpretación de resultados.</li>
+        </ul>
+      </section>
+
+      <!-- 3. DATOS -->
+      <section class="doc" id="s-datos">
+        <span class="kicker">Fuente y diccionario</span>
+        <h2 class="dh2">3. Datos utilizados</h2>
+        <p class="dp">Fuente: <b>xAPI-Edu-Data</b>, dataset público en Kaggle. <b>480 registros de estudiantes</b>.</p>
+        <p class="dp"><a href="https://www.kaggle.com/datasets/aljarah/xAPI-Edu-Data" target="_blank" rel="noopener">Consultar dataset en Kaggle ↗</a></p>
+        <div class="callout warning"><b>Alcance de la fuente:</b> el dataset corresponde a un contexto educativo escolar. El tablero usa nombres adaptados al lenguaje universitario. No debe presentarse como base de datos real de universidades.</div>
+        <h3 class="dh3">Adaptación de términos</h3>
+        <table>
+          <thead><tr><th>Campo original</th><th>Nombre en el tablero</th><th>Interpretación</th></tr></thead>
+          <tbody>
+            <tr><td>Etapa escolar</td><td>Facultad / nivel educativo</td><td>Básico, Medio y Superior.</td></tr>
+            <tr><td>Grado</td><td>Programa / grado</td><td>Grados 02 a 12 como proxy de programa.</td></tr>
+            <tr><td>Sección</td><td>Cohorte / sección</td><td>Grupos A, B y C.</td></tr>
+            <tr><td>Topic</td><td>Materia</td><td>Arabic, Biology, IT, Math, etc.</td></tr>
+            <tr><td>Class L/M/H</td><td>Rendimiento Bajo/Medio/Alto</td><td>Categorías ordinales de desempeño.</td></tr>
+            <tr><td>Days of absence</td><td>Ausencias / asistencia</td><td>Umbral de 7 ausencias.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout danger"><b>Nota metodológica:</b> 60, 80 y 95 no son calificaciones reales. Son valores asignados a las tres categorías. Llamarlo "nota aproximada" o "puntaje proxy", no nota real.</div>
+      </section>
+
+      <!-- 4. ETL -->
+      <section class="doc" id="s-etl">
+        <span class="kicker">Preparación de datos</span>
+        <h2 class="dh2">4. Proceso ETL: extracción, transformación y carga</h2>
+        <div class="dgrid three">
+          <div class="dcard"><span class="tag">E · Extract</span><h3 class="dh3" style="margin-top:10px;">Extracción</h3><p class="dp small">Lectura de <code>xAPI-Edu-Data.csv</code> con <code>pandas.read_csv()</code>. Validación de 17 columnas, nulos y duplicados.</p></div>
+          <div class="dcard"><span class="tag">T · Transform</span><h3 class="dh3" style="margin-top:10px;">Transformación</h3><p class="dp small">Limpieza, renombrado al español, campos derivados e indicadores calculados en Python.</p></div>
+          <div class="dcard"><span class="tag">L · Load</span><h3 class="dh3" style="margin-top:10px;">Carga</h3><p class="dp small">8 CSV en <code>datos/modelo_estrella/</code> para Power BI. Carga opcional en PostgreSQL vía Docker.</p></div>
+        </div>
+        <h3 class="dh3">Script: <code>scripts/01_etl.py</code></h3>
+        <table>
+          <thead><tr><th>Función</th><th>Qué hace</th></tr></thead>
+          <tbody>
+            <tr><td><code>extraer(ruta)</code></td><td>Lee el CSV, valida las 17 columnas esperadas, aborta si falta alguna.</td></tr>
+            <tr><td><code>calidad(df)</code></td><td>Reporta nulos, duplicados exactos y rangos fuera de escala (0–100).</td></tr>
+            <tr><td><code>transformar(df)</code></td><td>Limpia texto, renombra columnas, mapea códigos y calcula campos derivados.</td></tr>
+            <tr><td><code>cargar(df, carpeta)</code></td><td>Genera 7 dimensiones y <code>Fact_Desempeno.csv</code> con claves surrogadas (<code>SK_*</code>).</td></tr>
+          </tbody>
+        </table>
+        <h3 class="dh3">Transformaciones aplicadas</h3>
+        <ul>
+          <li><code>Nota_Ordinal</code>: Bajo=1, Medio=2, Alto=3 — para ordenar niveles en gráficos.</li>
+          <li><code>Nota_Aproximada</code>: Bajo=60, Medio=80, Alto=95 — punto medio de cada banda.</li>
+          <li><code>Es_Reprobado</code> / <code>Es_Sobresaliente</code> / <code>Es_Riesgo_Desercion</code>: flags binarios con <code>np.where</code>.</li>
+          <li><code>Indice_Participacion</code>: promedio de las 4 métricas de actividad LMS.</li>
+          <li><code>Rango_Participacion</code>: intervalos 0–25, 26–50, 51–75, 76–100 con <code>pd.cut()</code>.</li>
+        </ul>
+        <h3 class="dh3">Modelo estrella generado</h3>
+        <pre>Dim_Facultad   (3 filas)   ──┐
+Dim_Programa   (11 filas)  ──┤
+Dim_Materia    (12 filas)  ──┤
+Dim_Semestre   (2 filas)   ──┼──► Fact_Desempeno (480 filas · 22 columnas)
+Dim_Cohorte    (3 filas)   ──┤
+Dim_Genero     (2 filas)   ──┤
+Dim_Estudiante (480 filas) ──┘</pre>
+        <div class="callout warning"><b>¿Por qué Power BI usa CSV y no PostgreSQL?</b> Power BI Service requiere un Data Gateway para conectarse a una base de datos local. Para el despliegue público se usaron CSV directamente. La BD existe y está documentada como evidencia del componente de carga.</div>
+        <h3 class="dh3">Comandos de ejecución</h3>
+        <pre>pip install pandas numpy scipy statsmodels psycopg2-binary sqlalchemy
+
+# 1. ETL
+python scripts/01_etl.py
+
+# 2. ANOVA
+python scripts/02_anova.py
+
+# 3. Base de datos (opcional)
+docker compose up -d
+python scripts/03_carga_postgres.py</pre>
+      </section>
+
+      <!-- 5. HERRAMIENTAS -->
+      <section class="doc" id="s-herramientas">
+        <span class="kicker">Stack tecnológico</span>
+        <h2 class="dh2">5. Herramientas, lenguajes y librerías</h2>
+        <table>
+          <thead><tr><th>Herramienta / librería</th><th>Uso en el proyecto</th><th>Evidencia</th></tr></thead>
+          <tbody>
+            <tr><td><b>Python 3.x</b></td><td>Lenguaje principal. ETL, estadística y carga PostgreSQL.</td><td><span class="tag">Scripts incluidos</span></td></tr>
+            <tr><td><b>pandas</b></td><td><code>read_csv</code>/<code>to_csv</code>, <code>pd.cut()</code>, <code>merge()</code>, <code>crosstab()</code>.</td><td><span class="tag">01_etl.py · 02_anova.py</span></td></tr>
+            <tr><td><b>numpy</b></td><td><code>np.arange</code>, <code>np.where</code>, <code>np.nanmin</code>.</td><td><span class="tag">01_etl.py</span></td></tr>
+            <tr><td><b>scipy</b></td><td><code>f_oneway</code>, <code>kruskal</code>, <code>levene</code>, <code>shapiro</code>, <code>ttest_ind</code>, <code>chi2_contingency</code>.</td><td><span class="tag">02_anova.py</span></td></tr>
+            <tr><td><b>statsmodels</b></td><td><code>ols()</code>, <code>anova_lm()</code> tipo II, <code>pairwise_tukeyhsd</code>.</td><td><span class="tag">02_anova.py</span></td></tr>
+            <tr><td><b>SQLAlchemy + psycopg2</b></td><td><code>create_engine()</code>, <code>df.to_sql()</code> para PostgreSQL.</td><td><span class="tag">03_carga_postgres.py</span></td></tr>
+            <tr><td><b>Power BI Desktop</b></td><td>Modelo semántico, relaciones, 36 medidas DAX, dashboard 4 páginas.</td><td><span class="tag">PBIX comprobado</span></td></tr>
+            <tr><td><b>DAX</b></td><td><code>CALCULATE</code>, <code>RANKX</code>, <code>SUMX</code> (Pearson), <code>TOPN</code>, <code>REMOVEFILTERS</code>, semáforos.</td><td><span class="tag">PBIX comprobado</span></td></tr>
+            <tr><td><b>PostgreSQL 16 + Docker</b></td><td>Esquema en <code>sql/init.sql</code>: 9 tablas, índices y 5 vistas.</td><td><span class="tag">docker-compose.yml</span></td></tr>
+            <tr><td><b>Vercel</b></td><td>Despliegue estático del sitio web. Configurado con <code>vercel.json</code>.</td><td><span class="tag">Publicado</span></td></tr>
+          </tbody>
+        </table>
+        <h3 class="dh3">Funciones DAX utilizadas</h3>
+        <div class="dgrid">
+          <div class="dcard"><b>CALCULATE</b><p class="small dp">Evalúa una expresión modificando el contexto de filtros.</p></div>
+          <div class="dcard"><b>DIVIDE</b><p class="small dp">División segura que evita errores por divisor cero.</p></div>
+          <div class="dcard"><b>REMOVEFILTERS</b><p class="small dp">Retira filtros; usado en comparaciones semestrales.</p></div>
+          <div class="dcard"><b>RANKX</b><p class="small dp">Rankings de programas y materias por tasa de reprobación.</p></div>
+          <div class="dcard"><b>TOPN + CONTAINS</b><p class="small dp">Selecciona las 10 materias con mayor reprobación.</p></div>
+          <div class="dcard"><b>SUMX</b><p class="small dp">Correlación de Pearson calculada fila por fila.</p></div>
+        </div>
+      </section>
+
+      <!-- 6. MODELO -->
+      <section class="doc" id="s-modelo">
+        <span class="kicker">Modelo semántico</span>
+        <h2 class="dh2">6. Modelo de datos</h2>
+        <p class="dp">Esquema estrella: una tabla de hechos central con dimensiones relacionadas. Relaciones muchos-a-uno, filtro desde dimensiones hacia hechos.</p>
+        <table>
+          <thead><tr><th>Tabla</th><th>Filas</th><th>Función</th></tr></thead>
+          <tbody>
+            <tr><td><code>Fact_Desempeno</code></td><td>480</td><td>Tabla de hechos central.</td></tr>
+            <tr><td><code>Dim_Facultad</code></td><td>3</td><td>Nivel educativo: Básico, Medio, Superior.</td></tr>
+            <tr><td><code>Dim_Programa</code></td><td>11</td><td>Grados proxy de programa.</td></tr>
+            <tr><td><code>Dim_Materia</code></td><td>12</td><td>Asignaturas.</td></tr>
+            <tr><td><code>Dim_Semestre</code></td><td>2</td><td>Con columna de orden.</td></tr>
+            <tr><td><code>Dim_Cohorte</code></td><td>3</td><td>Secciones A, B, C.</td></tr>
+            <tr><td><code>Dim_Genero</code></td><td>2</td><td>Femenino / Masculino.</td></tr>
+            <tr><td><code>Dim_Estudiante</code></td><td>480</td><td>Atributos descriptivos.</td></tr>
+            <tr><td><code>_Medidas</code></td><td>1</td><td>Tabla contenedora de medidas DAX.</td></tr>
+            <tr><td><code>resultados_anova</code></td><td>8</td><td>Resultados estadísticos estáticos.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">Los cuatro segmentadores (nivel educativo, semestre, género, sección) están sincronizados entre las cuatro páginas del reporte.</div>
+      </section>
+
+      <!-- 7. DAX -->
+      <section class="doc" id="s-dax">
+        <span class="kicker">Consultas y cálculos</span>
+        <h2 class="dh2">7. Consultas analíticas y medidas DAX</h2>
+        <table>
+          <thead><tr><th>Familia</th><th>Medidas</th><th>Propósito</th></tr></thead>
+          <tbody>
+            <tr><td>Base</td><td><code>Total Estudiantes</code>, <code>Promedio Nota</code></td><td>Población y promedio del contexto actual.</td></tr>
+            <tr><td>Porcentajes</td><td>Tasas de reprobación, deserción y sobresalientes</td><td>Proporciones sobre el total filtrado.</td></tr>
+            <tr><td>Semestral</td><td><code>Variacion Semestral</code>, <code>Tendencia Texto</code></td><td>Comparar semestres y etiquetar cambio.</td></tr>
+            <tr><td>Género</td><td>Promedios F/M, brecha F−M</td><td>Comparación entre los dos grupos.</td></tr>
+            <tr><td>Rankings</td><td><code>Ranking Programa</code>, <code>Tasa Reprobacion Top 10</code></td><td>Ordenar y filtrar top materias.</td></tr>
+            <tr><td>Semáforo</td><td><code>Color Semaforo Reprobacion</code></td><td>Rojo ≥40%, ámbar ≥25%, verde.</td></tr>
+            <tr><td>Estadística</td><td><code>Correlacion Participacion vs Nota</code></td><td>Pearson con <code>SUMX</code>.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning"><b>Comportamiento de filtros:</b> las medidas semestrales usan <code>REMOVEFILTERS(Dim_Semestre)</code>. Las comparaciones de género fijan cada grupo con <code>CALCULATE</code>. Algunas tarjetas no responden a todos los segmentadores.</div>
+      </section>
+
+      <!-- 8. PREGUNTAS -->
+      <section class="doc" id="s-preguntas">
+        <span class="kicker">Preguntas de negocio</span>
+        <h2 class="dh2">8. Las 10 preguntas, respuestas y aplicaciones</h2>
+
+        <div class="question">
+          <h3>1. ¿Cuál es el promedio de notas por materia y semestre?</h3>
+          <p class="dp"><span class="tag">Página 2</span> Matriz materia × semestre. Biology: 85.33; English: 79.11→84.71; Math: 74.06→89.00.</p>
+          <p class="small dp">Precaución: puntaje es recodificación ordinal, no nota real.</p>
+        </div>
+        <div class="question">
+          <h3>2. ¿Cuál es la tasa de deserción por facultad?</h3>
+          <p class="dp"><span class="tag">Página 3</span> Riesgo proxy (Bajo + ≥7 ausencias): Básico 30.2%, Medio 19.4%, Superior 24.2%.</p>
+          <p class="small dp">Precaución: no es deserción real, es un proxy definido en el proyecto.</p>
+        </div>
+        <div class="question">
+          <h3>3. ¿Cómo es el desempeño por género?</h3>
+          <p class="dp"><span class="tag">Página 3</span> Femenino 83.69, Masculino 76.54. Brecha: 7.14 puntos. Reprobación: 13.7% vs 33.8%.</p>
+          <p class="small dp">Precaución: diferencia descriptiva; las ausencias también difieren entre géneros.</p>
+        </div>
+        <div class="question">
+          <h3>4. ¿Cómo se compara el rendimiento entre programas?</h3>
+          <p class="dp"><span class="tag">Página 3</span> Grado 06: 85.31; Grado 11: 83.85; Grado 05: 60.00 (solo 3 estudiantes).</p>
+          <p class="small dp">Precaución: grupos pequeños hacen inestables los rankings.</p>
+        </div>
+        <div class="question">
+          <h3>5. ¿Qué tendencias existen por semestre?</h3>
+          <p class="dp"><span class="tag">Página 2</span> S1: 77.51, S2: 80.85, diferencia: +3.34 puntos.</p>
+          <p class="small dp">Precaución: no es evolución de los mismos estudiantes; composición de materias cambia entre semestres.</p>
+        </div>
+        <div class="question">
+          <h3>6. ¿Cuáles son las 10 asignaturas con mayor reprobación?</h3>
+          <p class="dp"><span class="tag">Página 2</span> IT 40%, Chemistry 33.3%, Math 33.3%, Spanish 32%, Arabic 28.8%.</p>
+        </div>
+        <div class="question">
+          <h3>7. ¿Qué relación existe entre asistencia y rendimiento?</h3>
+          <p class="dp"><span class="tag">Página 4</span> &lt;7 ausencias: 86.40 · ≥7 ausencias: 68.17 · Diferencia: 18.23 puntos.</p>
+          <p class="small dp">Precaución: asociación, no causalidad.</p>
+        </div>
+        <div class="question">
+          <h3>8. ¿Quiénes presentan desempeño sobresaliente?</h3>
+          <p class="dp"><span class="tag">Página 1 y 2</span> 142 estudiantes = 29.6%. Tabla desglosa por materia.</p>
+        </div>
+        <div class="question">
+          <h3>9. ¿Cómo se comparan los resultados entre cohortes?</h3>
+          <p class="dp"><span class="tag">Página 3</span> Sección B: 31.74% nivel Alto. Sección C: 56.67% nivel Medio.</p>
+        </div>
+        <div class="question">
+          <h3>10. ¿Qué factores influyen en el éxito académico?</h3>
+          <p class="dp"><span class="tag">Página 4</span> Correlación participación–nota: 0.697. Rango 76–100: 62.3% sobresalientes. Tabla ANOVA con 8 comparaciones.</p>
+          <p class="small dp">Precaución: asociaciones observadas, no causalidad probada.</p>
+        </div>
+      </section>
+
+      <!-- 9. DASHBOARD -->
+      <section class="doc" id="s-dashboard">
+        <span class="kicker">Recorrido del tablero</span>
+        <h2 class="dh2">9. ¿Qué contiene cada página del dashboard?</h2>
+        <details open>
+          <summary>Página 1 · Resumen ejecutivo</summary>
+          <div class="inside">
+            <p class="dp"><b>Objetivo:</b> estado general de la población.</p>
+            <ul><li>Segmentadores: nivel, semestre, género, sección.</li><li>5 tarjetas KPI: estudiantes, nota, reprobación, riesgo, sobresalientes.</li><li>Dona de distribución Bajo/Medio/Alto.</li><li>Barras de nota por nivel educativo.</li></ul>
+            <p class="dp"><b>Mensaje:</b> 480 registros, 79.15 promedio, 26.5% Bajo, 29.6% Alto.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Página 2 · Desempeño académico</summary>
+          <div class="inside">
+            <ul><li>Matriz materia × semestre con degradado de color.</li><li>Comparación S1 vs S2 con tarjeta de tendencia.</li><li>Top 10 reprobación con semáforo de colores.</li><li>Tabla de sobresalientes por materia.</li></ul>
+            <p class="dp"><b>Mensaje:</b> IT 40% de nivel Bajo; S2 supera a S1 en 3.34 puntos.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Página 3 · Comparativas entre grupos</summary>
+          <div class="inside">
+            <ul><li>Riesgo proxy por nivel educativo.</li><li>Nota por género y brecha F−M.</li><li>Comparativa por grado y ranking.</li><li>Distribución 100% apilada por sección.</li></ul>
+          </div>
+        </details>
+        <details>
+          <summary>Página 4 · Factores de éxito académico</summary>
+          <div class="inside">
+            <ul><li>Asistencia vs nota.</li><li>Correlación participación–nota (0.697).</li><li>Sobresalientes por rango de participación.</li><li>Actividad promedio por nivel.</li><li>Tabla ANOVA estática (8 filas).</li></ul>
+            <p class="dp"><b>Mensaje:</b> asistencia y participación se asocian con rendimiento; sin probar causalidad.</p>
+          </div>
+        </details>
+      </section>
+
+      <!-- 10. TABLERO EN VIVO -->
+      <section class="doc" id="s-tablero">
+        <span class="kicker">Tablero publicado</span>
+        <h2 class="dh2">10. Tablero en vivo · Power BI</h2>
+        <p class="lead dp">Tablero publicado en <b>Power BI Service</b>. Usa los segmentadores directamente desde aquí.</p>
+        <div style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(23,50,77,.12);margin:16px 0;">
+          <iframe
+            title="Rendimiento Académico — EduMetrics"
+            width="100%" height="580"
+            src="https://app.powerbi.com/view?r=eyJrIjoiMTE0NGRmOWEtMDc2ZS00M2RmLWJjMDYtMzM3MzM1NDI5YzI4IiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9"
+            frameborder="0" allowfullscreen="true" style="display:block;">
+          </iframe>
+        </div>
+        <div class="dgrid" style="margin-top:14px;">
+          <div class="dcard"><span class="tag">Página 1</span><b> Resumen ejecutivo</b><p class="small dp">KPIs globales, distribución y nota por nivel.</p></div>
+          <div class="dcard"><span class="tag">Página 2</span><b> Desempeño académico</b><p class="small dp">Matriz materia × semestre, top 10, sobresalientes.</p></div>
+          <div class="dcard"><span class="tag">Página 3</span><b> Comparativas</b><p class="small dp">Deserción, género, programas, cohortes.</p></div>
+          <div class="dcard"><span class="tag">Página 4</span><b> Factores de éxito</b><p class="small dp">Asistencia, participación, correlación, ANOVA.</p></div>
+        </div>
+      </section>
+
+      <!-- 11. ANOVA -->
+      <section class="doc" id="s-estadistica">
+        <span class="kicker">Validación estadística</span>
+        <h2 class="dh2">11. ANOVA y pruebas estadísticas</h2>
+        <ul>
+          <li><b>H₀:</b> las medias de los grupos son iguales.</li>
+          <li><b>H₁:</b> al menos una media difiere. <b>α = 0.05</b></li>
+        </ul>
+        <table style="margin-top:14px;">
+          <thead><tr><th>Prueba</th><th>Función</th><th>Interpretación</th></tr></thead>
+          <tbody>
+            <tr><td>ANOVA (f_oneway)</td><td>Compara medias entre ≥3 grupos</td><td>p &lt; 0.05 → rechazar H₀</td></tr>
+            <tr><td>Tukey HSD</td><td>Post-hoc: qué pares difieren</td><td>reject=True → par significativo</td></tr>
+            <tr><td>Levene</td><td>Homogeneidad de varianzas</td><td>p &lt; 0.05 → varianzas desiguales</td></tr>
+            <tr><td>Shapiro-Wilk</td><td>Normalidad por grupo</td><td>p &lt; 0.05 → posible no normalidad</td></tr>
+            <tr><td>Kruskal-Wallis</td><td>Alternativa no paramétrica</td><td>Usar cuando Levene falla</td></tr>
+            <tr><td>t de Welch</td><td>Comparación de 2 grupos</td><td>Fila género: F = t²</td></tr>
+            <tr><td>Chi-cuadrado</td><td>Variables categóricas vs rendimiento</td><td>V de Cramér mide fuerza</td></tr>
+          </tbody>
+        </table>
+        <h3 class="dh3">Resultados en el tablero</h3>
+        <table>
+          <thead><tr><th>Variable</th><th>Factor</th><th>F</th><th>p</th><th>η²</th><th>Conclusión</th></tr></thead>
+          <tbody>
+            <tr><td>Anuncios vistos</td><td>Nivel rendimiento</td><td>98.73</td><td>&lt;0.001</td><td>0.293</td><td>Diferencias significativas</td></tr>
+            <tr><td>Manos levantadas</td><td>Nivel rendimiento</td><td>176.39</td><td>&lt;0.001</td><td>0.425</td><td>Diferencias significativas</td></tr>
+            <tr><td>Nota aproximada</td><td>Facultad</td><td>2.33</td><td>0.098</td><td>0.010</td><td>Sin evidencia de diferencias</td></tr>
+            <tr><td>Nota aproximada</td><td>Género</td><td>37.56</td><td>&lt;0.001</td><td>0.073</td><td>Diferencias significativas</td></tr>
+            <tr><td>Nota aproximada</td><td>Materia</td><td>2.41</td><td>0.006</td><td>0.054</td><td>Diferencias significativas</td></tr>
+            <tr><td>Nota aproximada</td><td>Programa</td><td>2.13</td><td>0.026</td><td>0.039</td><td>Diferencias significativas</td></tr>
+            <tr><td>Participación foros</td><td>Nivel rendimiento</td><td>25.25</td><td>&lt;0.001</td><td>0.096</td><td>Diferencias significativas</td></tr>
+            <tr><td>Recursos visitados</td><td>Nivel rendimiento</td><td>230.47</td><td>&lt;0.001</td><td>0.491</td><td>Diferencias significativas</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning"><b>η² (tamaño del efecto):</b> &lt;0.06 pequeño · 0.06–0.14 mediano · &gt;0.14 grande. La fila de género usa t de Welch (F = t²), no ANOVA clásica. Facultad (p=0.098) no es significativa al 5%.</div>
+      </section>
+
+      <!-- 12. HALLAZGOS -->
+      <section class="doc" id="s-hallazgos">
+        <span class="kicker">Resultados ejecutivos</span>
+        <h2 class="dh2">12. Hallazgos principales</h2>
+        <div class="dgrid three">
+          <div class="dcard"><div class="metric">480</div><div class="dlabel">Registros</div></div>
+          <div class="dcard"><div class="metric">79.15</div><div class="dlabel">Puntaje promedio</div></div>
+          <div class="dcard"><div class="metric">26.5%</div><div class="dlabel">Nivel bajo</div></div>
+          <div class="dcard"><div class="metric">24.2%</div><div class="dlabel">Riesgo proxy</div></div>
+          <div class="dcard"><div class="metric">29.6%</div><div class="dlabel">Nivel alto</div></div>
+          <div class="dcard"><div class="metric">0.697</div><div class="dlabel">Correlación participación</div></div>
+        </div>
+        <ul style="margin-top:16px;">
+          <li><b>Asistencia:</b> &lt;7 ausencias promedia 86.40; ≥7 ausencias promedia 68.17 (diferencia: 18.23 puntos).</li>
+          <li><b>Participación:</b> correlación de Pearson 0.70 con el puntaje aproximado.</li>
+          <li><b>Género:</b> femenino 83.69, masculino 76.54; brecha 7.14 puntos.</li>
+          <li><b>Materias:</b> IT 40% de nivel Bajo; Biology promedia 85.3; Geology 0% de reprobación.</li>
+          <li><b>Nivel educativo:</b> Básico 77.6 y 32.7% de reprobación.</li>
+        </ul>
+      </section>
+
+      <!-- 13. LIMITACIONES -->
+      <section class="doc" id="s-limitaciones">
+        <span class="kicker">Transparencia</span>
+        <h2 class="dh2">13. Limitaciones y mejoras recomendadas</h2>
+        <ol>
+          <li><b>Fuente escolar:</b> el dataset no es de universidades reales; describir como análisis de datos educativos adaptados.</li>
+          <li><b>Nota proxy:</b> 60/80/95 no son calificaciones reales; rotular siempre como "puntaje aproximado".</li>
+          <li><b>Deserción proxy:</b> no es tasa real; para medir abandono se requieren registros de retiro.</li>
+          <li><b>Comparación semestral:</b> son grupos distintos, no evolución individual de los mismos estudiantes.</li>
+          <li><b>Grupos pequeños:</b> Grado 05 tiene 3 estudiantes; Sección C tiene 30. Rankings con cautela.</li>
+          <li><b>p-valores en CSV:</b> valores muy pequeños guardados como 0.0; mostrar como "p &lt; 0.001".</li>
+          <li><b>ANOVA estática:</b> la tabla no responde a filtros; corresponde a la muestra global.</li>
+          <li><b>Ruta de datos:</b> el PBIX usa ruta absoluta local; cambiar a ruta relativa o SharePoint para compartir.</li>
+        </ol>
+      </section>
+
+      <!-- 14. GUION -->
+      <section class="doc" id="s-guion">
+        <span class="kicker">Defensa oral</span>
+        <h2 class="dh2">14. Guion para sustentar</h2>
+        <h3 class="dh3">Introducción</h3>
+        <p class="dp">«Nuestro proyecto se llama EduMetrics, Observatorio Académico. Su propósito es transformar datos educativos en información útil para comprender el rendimiento estudiantil y explorar factores asociados como la asistencia y la participación.»</p>
+        <h3 class="dh3">Datos y metodología</h3>
+        <p class="dp">«Trabajamos con el dataset público xAPI-Edu-Data (480 registros). Realizamos ETL en Python, organizamos los datos en un modelo estrella y construimos 36 medidas DAX en Power BI.»</p>
+        <h3 class="dh3">Dashboard</h3>
+        <p class="dp">«El tablero tiene cuatro páginas: resumen ejecutivo, desempeño por materia y semestre, comparativas entre grupos y factores de éxito. Cuatro segmentadores sincronizados permiten explorar todos los ángulos.»</p>
+        <h3 class="dh3">Estadística</h3>
+        <p class="dp">«Complementamos las visualizaciones con ANOVA, Tukey, Kruskal-Wallis, Levene, Shapiro y chi-cuadrado. Interpretamos los valores p y η², y reconocemos que las asociaciones no prueban causalidad.»</p>
+        <h3 class="dh3">Cierre</h3>
+        <p class="dp">«EduMetrics demuestra cómo Business Intelligence convierte registros educativos en indicadores comprensibles y apoya decisiones académicas basadas en datos.»</p>
+        <div class="callout success"><b>Frase final:</b> «No se trata solo de mostrar datos, sino de convertirlos en preguntas, hallazgos y decisiones.»</div>
+      </section>
+
+      <!-- 15. GLOSARIO -->
+      <section class="doc" id="s-glosario">
+        <span class="kicker">Conceptos clave</span>
+        <h2 class="dh2">15. Glosario</h2>
+        <table>
+          <tbody>
+            <tr><th>ETL</th><td>Extract, Transform, Load: extraer, transformar y cargar datos.</td></tr>
+            <tr><th>DAX</th><td>Data Analysis Expressions: lenguaje de fórmulas para medidas en Power BI.</td></tr>
+            <tr><th>Modelo estrella</th><td>Una tabla de hechos relacionada con dimensiones descriptivas.</td></tr>
+            <tr><th>KPI</th><td>Indicador clave de desempeño.</td></tr>
+            <tr><th>Contexto de filtro</th><td>Conjunto de filtros que determina qué filas participan en un cálculo DAX.</td></tr>
+            <tr><th>Correlación</th><td>Medida de asociación entre variables; no implica causalidad.</td></tr>
+            <tr><th>ANOVA</th><td>Análisis de varianza: compara medias de varios grupos.</td></tr>
+            <tr><th>Valor p</th><td>Probabilidad de observar el resultado si H₀ fuera verdadera.</td></tr>
+            <tr><th>η²</th><td>Eta cuadrado: proporción de variabilidad explicada por el factor.</td></tr>
+            <tr><th>Proxy</th><td>Indicador aproximado cuando no se dispone de medición directa.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="p2-actions">
+        <button onclick="window.print()">🖨 Imprimir / Guardar como PDF</button>
+        <button class="secondary" onclick="irA('p1')">← Volver al inicio</button>
+        <button class="secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Subir</button>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="p2-footer">
+    EduMetrics · Observatorio Académico · Python · pandas · numpy · scipy · statsmodels · Power BI · DAX · PostgreSQL · Docker · Vercel
+  </footer>
+
+</div><!-- /p2 -->
+
+<script>
+function irA(id) {
+  // Ocultar todas las páginas
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Mostrar la elegida
+  document.getElementById(id).classList.add('active');
+  // Actualizar tabs
+  document.getElementById('tab-p1').classList.toggle('active-tab', id === 'p1');
+  document.getElementById('tab-p2').classList.toggle('active-tab', id === 'p2');
+  // Scroll al tope
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function irPantallaCompleta() {
+  const f = document.getElementById('powerbi-frame');
+  if (f.requestFullscreen) f.requestFullscreen();
+  else if (f.webkitRequestFullscreen) f.webkitRequestFullscreen();
+  else if (f.msRequestFullscreen) f.msRequestFullscreen();
+}
+</script>
+
+</body>
+</html>

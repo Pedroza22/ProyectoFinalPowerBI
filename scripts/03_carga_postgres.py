@@ -234,7 +234,7 @@ def main(carpeta):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--salida", default="salida",
+    ap.add_argument("--salida", default="datos/modelo_estrella",
                     help="Carpeta con los CSV generados por 01_etl.py")
     a = ap.parse_args()
     main(a.salida)

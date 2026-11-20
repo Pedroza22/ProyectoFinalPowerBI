@@ -236,15 +236,18 @@ python 03_carga_postgres.py --salida salida</pre>
   <table>
     <thead><tr><th>Herramienta / lenguaje</th><th>Uso en el proyecto</th><th>Estado de evidencia</th></tr></thead>
     <tbody>
-      <tr><td><b>Power BI Desktop</b></td><td>Modelo semántico, relaciones, medidas y dashboard de cuatro páginas.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
-      <tr><td><b>Power Query (lenguaje M)</b></td><td>Conexión a CSV, preparación y transformación de datos mediante consultas.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
-      <tr><td><b>DAX</b></td><td>36 medidas para indicadores, comparaciones, rankings y correlación.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
-      <tr><td><b>CSV</b></td><td>Formato de archivos de entrada y tabla de resultados estadísticos.</td><td><span class="tag">Comprobado</span></td></tr>
-      <tr><td><b>Pruebas estadísticas</b></td><td>ANOVA, Shapiro-Wilk, Levene, Kruskal-Wallis y prueba t de Welch en las comparaciones documentadas.</td><td><span class="tag">Resultados presentes</span></td></tr>
-      <tr><td><b>Python / librerías externas</b></td><td>El análisis revisado indica que los resultados estadísticos se generaron externamente, pero el PBIX no identifica el lenguaje ni los paquetes concretos.</td><td><span class="tag">No confirmado</span></td></tr>
+      <tr><td><b>Python 3.x</b></td><td>Lenguaje principal. ETL en <code>01_etl.py</code>, estadística en <code>02_anova.py</code>, carga PostgreSQL en <code>03_carga_postgres.py</code>.</td><td><span class="tag">Scripts incluidos</span></td></tr>
+      <tr><td><b>pandas</b></td><td><code>read_csv</code>/<code>to_csv</code>, <code>pd.cut()</code> para rangos, <code>merge()</code> para tabla de hechos, <code>crosstab()</code> para chi-cuadrado.</td><td><span class="tag">Comprobado en 01_etl.py y 02_anova.py</span></td></tr>
+      <tr><td><b>numpy</b></td><td><code>np.arange</code> para IDs, <code>np.where</code> para banderas, <code>np.nanmin</code> para Shapiro.</td><td><span class="tag">Comprobado en 01_etl.py</span></td></tr>
+      <tr><td><b>scipy</b></td><td><code>stats.f_oneway</code>, <code>stats.kruskal</code>, <code>stats.levene</code>, <code>stats.shapiro</code>, <code>stats.ttest_ind</code>, <code>stats.chi2_contingency</code>.</td><td><span class="tag">Comprobado en 02_anova.py</span></td></tr>
+      <tr><td><b>statsmodels</b></td><td><code>ols()</code>, <code>anova_lm()</code> tipo II, <code>pairwise_tukeyhsd</code> Tukey HSD.</td><td><span class="tag">Comprobado en 02_anova.py</span></td></tr>
+      <tr><td><b>SQLAlchemy + psycopg2</b></td><td><code>create_engine()</code> y <code>df.to_sql()</code> para cargar datos en PostgreSQL.</td><td><span class="tag">Comprobado en 03_carga_postgres.py</span></td></tr>
+      <tr><td><b>Power BI Desktop</b></td><td>Modelo semántico, relaciones, 36 medidas DAX y dashboard de 4 páginas. Lee CSV de <code>salida/</code>.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
+      <tr><td><b>DAX</b></td><td>36 medidas: <code>CALCULATE</code>, <code>RANKX</code>, <code>SUMX</code> (Pearson), <code>TOPN</code>, <code>REMOVEFILTERS</code>, semáforos y títulos dinámicos.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
+      <tr><td><b>PostgreSQL 16 + Docker</b></td><td>Esquema estrella en <code>sql/init.sql</code>: 9 tablas, índices y 5 vistas analíticas. Levantado con <code>docker-compose.yml</code>.</td><td><span class="tag">Incluido</span></td></tr>
+      <tr><td><b>Vercel</b></td><td>Despliegue estático de <code>tablero.html</code> con Power BI embebido. Configurado con <code>vercel.json</code>.</td><td><span class="tag">Publicado</span></td></tr>
     </tbody>
   </table>
-  <div class="callout warning"><b>Importante sobre “librerías”:</b> no es correcto afirmar que se utilizó pandas, NumPy, SciPy, statsmodels, Matplotlib o Seaborn sin revisar el script o el archivo de dependencias que generó los resultados. Esos paquetes son opciones habituales para análisis estadístico en Python, pero no están acreditados por el PBIX inspeccionado. Si el equipo sí utilizó alguno, agreguen el nombre y adjunten el script como evidencia.</div>
   <h3>Funciones y recursos DAX identificados</h3>
   <p>En las medidas se identifican funciones como:</p>
   <div class="grid">

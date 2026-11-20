@@ -3,10 +3,13 @@
 
 EXTRACT   : lee xAPI-Edu-Data.csv
 TRANSFORM : limpia, renombra, valida calidad, deriva campos y construye un modelo estrella
-LOAD      : escribe CSV en ./salida/ listos para importar en Power BI
+LOAD      : escribe CSV en datos/modelo_estrella/ listos para importar en Power BI
 
-Uso:
-    python 01_etl.py --entrada xAPI-Edu-Data.csv --salida salida
+Uso (desde la raiz del proyecto):
+    python scripts/01_etl.py
+
+Uso con rutas personalizadas:
+    python scripts/01_etl.py --entrada datos/entrada/xAPI-Edu-Data.csv --salida datos/modelo_estrella
 """
 import argparse
 import os
@@ -142,8 +145,8 @@ def cargar(df, carpeta):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--entrada", default="xAPI-Edu-Data.csv")
-    ap.add_argument("--salida", default="salida")
+    ap.add_argument("--entrada", default="datos/entrada/xAPI-Edu-Data.csv")
+    ap.add_argument("--salida",  default="datos/modelo_estrella")
     a = ap.parse_args()
     datos = extraer(a.entrada)
     calidad(datos)

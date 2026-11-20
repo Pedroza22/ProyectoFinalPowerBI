@@ -2,16 +2,16 @@
 02_anova.py - Validacion estadistica (ANOVA) sobre el dataset limpio generado por 01_etl.py
 
 Pruebas:
-  A) ANOVA de una via: cada indicador de participacion (Manos_Levantadas, Recursos_Visitados,
-     Anuncios_Vistos, Participacion_Foros) segun Nivel_Rendimiento (Bajo / Medio / Alto)
-     -> normalidad (Shapiro por grupo), homogeneidad (Levene), ANOVA, eta cuadrado,
-        Kruskal-Wallis (alternativa no parametrica) y Tukey HSD post hoc.
-  B) ANOVA de una via: Nota_Aproximada por Materia, por Programa, por Facultad y por Genero(t).
-  C) ANOVA de dos vias: Indice_Participacion ~ Nivel_Rendimiento * Genero.
-  D) Chi-cuadrado para variables categoricas vs rendimiento (asistencia, acudiente, etc.)
+  A) ANOVA de una via: cada indicador de participacion segun Nivel_Rendimiento
+  B) ANOVA de una via: Nota_Aproximada por Materia, Programa, Facultad y Genero(t)
+  C) ANOVA de dos vias: Indice_Participacion ~ Nivel_Rendimiento * Genero
+  D) Chi-cuadrado para variables categoricas vs rendimiento
 
-Uso:
-    python 02_anova.py --entrada salida/dataset_limpio.csv --salida salida
+Uso (desde la raiz del proyecto):
+    python scripts/02_anova.py
+
+Uso con rutas personalizadas:
+    python scripts/02_anova.py --entrada datos/modelo_estrella/dataset_limpio.csv --salida datos/estadistica
 Requiere: pandas, scipy, statsmodels
 """
 import argparse
@@ -110,7 +110,7 @@ def main(entrada, salida):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--entrada", default="salida/dataset_limpio.csv")
-    ap.add_argument("--salida", default="salida")
+    ap.add_argument("--entrada", default="datos/modelo_estrella/dataset_limpio.csv")
+    ap.add_argument("--salida",  default="datos/estadistica")
     a = ap.parse_args()
     main(a.entrada, a.salida)

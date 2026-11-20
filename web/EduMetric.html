@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMetrics – Observatorio Inteligente del Rendimiento Académico</title>
+    <style>
+        :root {
+            --color-primary: #0f172a;
+            --color-secondary: #1e293b;
+            --color-accent: #1d4ed8;
+            --color-accent-hover: #1e40af;
+            --color-accent-light: #eff6ff;
+            --color-bg: #f8fafc;
+            --color-surface: #ffffff;
+            --color-border: #e2e8f0;
+            --color-text: #1e293b;
+            --color-text-muted: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            padding: 36px 40px;
+            border-bottom: 1px solid var(--color-secondary);
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #93c5fd;
+            margin-bottom: 8px;
+        }
+
+        header h1 {
+            margin: 0 0 12px 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+        }
+
+        header p {
+            margin: 0;
+            max-width: 850px;
+            font-size: 1rem;
+            color: #cbd5e1;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1280px;
+            margin: 36px auto;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Sección Propuesta de Valor */
+        .value-proposition {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-accent);
+            border-radius: 6px;
+            padding: 28px 32px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        }
+
+        .value-proposition .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--color-accent);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .value-proposition h2 {
+            margin: 0 0 14px 0;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .value-proposition p {
+            margin: 0 0 14px 0;
+            color: var(--color-text-muted);
+            font-size: 0.975rem;
+        }
+
+        .value-proposition p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Cuadrícula de pilares analíticos */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .pillar-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+        }
+
+        .pillar-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .pillar-card p {
+            margin: 0;
+            font-size: 0.925rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Contenedor del Tablero Power BI */
+        .report-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .toolbar-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toolbar-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .toolbar-subtitle {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .btn-fullscreen {
+            background-color: var(--color-accent);
+            color: var(--color-surface);
+            border: none;
+            padding: 9px 18px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .btn-fullscreen:hover {
+            background-color: var(--color-accent-hover);
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 62.25%; /* Relación de aspecto original: 373.5 / 600 */
+            height: 0;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            background-color: #f1f5f9;
+        }
+
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Cierre ejecutivo */
+        .closing-statement {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            border-radius: 6px;
+            padding: 24px 32px;
+            text-align: center;
+        }
+
+        .closing-statement p {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #f1f5f9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 0.825rem;
+            color: var(--color-text-muted);
+            border-top: 1px solid var(--color-border);
+            background-color: var(--color-surface);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .pillars-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 24px 20px;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .value-proposition,
+            .report-card,
+            .closing-statement {
+                padding: 20px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <span class="badge">Prototipo de Inteligencia de Negocios</span>
+            <h1>EduMetrics – Observatorio Inteligente del Rendimiento Académico</h1>
+            <p>Transforma datos educativos en información visual y estadística para apoyar decisiones académicas.</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="value-proposition" aria-label="Propuesta de valor">
+            <span class="section-label">Propuesta de Valor</span>
+            <h2>Transformamos datos académicos en decisiones que impulsan el aprendizaje.</h2>
+            <p>
+                Las instituciones educativas generan información sobre el desempeño, la asistencia y la participación de sus estudiantes, pero esos datos no siempre se convierten en decisiones oportunas. EduMetrics propone centralizar y analizar esa información mediante un tablero interactivo de inteligencia de negocios.
+            </p>
+        </section>
+
+        <section class="pillars-grid" aria-label="Capacidades del Observatorio">
+            <article class="pillar-card">
+                <h3>Comparación Multidimensional</h3>
+                <p>
+                    Con nuestro Observatorio Académico podemos comparar el rendimiento por materia, semestre, nivel, género y sección, identificando asignaturas con mayores porcentajes de estudiantes en nivel bajo y reconociendo grupos con resultados sobresalientes.
+                </p>
+            </article>
+
+            <article class="pillar-card">
+                <h3>Correlación de Factores</h3>
+                <p>
+                    Permite explorar de manera integral la relación existente entre la asistencia, la participación en clase y el desempeño académico final de los estudiantes.
+                </p>
+            </article>
+
+            <article class="pillar-card">
+                <h3>Rigor Estadístico y Alertas</h3>
+                <p>
+                    Incorporamos análisis estadístico para evaluar si las diferencias entre grupos cuentan con evidencia estadística, facilitando la detección de señales de alerta y orientando acciones de acompañamiento académico.
+                </p>
+            </article>
+        </section>
+
+        <section class="report-card" aria-label="Tablero de Power BI">
+            <div class="toolbar">
+                <div class="toolbar-info">
+                    <span class="toolbar-title">Tablero Interactivo de Rendimiento Académico</span>
+                    <span class="toolbar-subtitle">Utilice los filtros internos del panel para explorar indicadores por grupo y asignatura</span>
+                </div>
+                <button type="button" class="btn-fullscreen" onclick="activarPantallaCompleta()">
+                    Pantalla completa
+                </button>
+            </div>
+
+            <div class="iframe-container">
+                <iframe
+                    id="powerbi-report"
+                    title="Rendimiento"
+                    src="https://app.powerbi.com/view?r=eyJrIjoiMTE0NGRmOWEtMDc2ZS00M2RmLWJjMDYtMzM3MzM1NDI5YzI4IiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9"
+                    allowFullScreen="true">
+                </iframe>
+            </div>
+        </section>
+
+        <section class="closing-statement" aria-label="Enfoque institucional">
+            <p>
+                EduMetrics no busca reemplazar la decisión de docentes o directivos: busca darles evidencia organizada para tomarla mejor.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        EduMetrics – Observatorio Inteligente del Rendimiento Académico
+    </footer>
+
+    <script>
+        function activarPantallaCompleta() {
+            const marco = document.getElementById("powerbi-report");
+            if (marco.requestFullscreen) {
+                marco.requestFullscreen();
+            } else if (marco.webkitRequestFullscreen) {
+                marco.webkitRequestFullscreen();
+            } else if (marco.msRequestFullscreen) {
+                marco.msRequestFullscreen();
+            }
+        }
+    </script>
+
+</body>
+</html>
