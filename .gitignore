@@ -1,0 +1,14 @@
+# Vercel
+.vercel
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# PostgreSQL / Docker (datos locales)
+postgres_data/
+
+# Archivos grandes que no van al repo
+xAPI-Edu-Data.csv

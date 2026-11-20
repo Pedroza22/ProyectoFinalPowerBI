@@ -1,0 +1,613 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Documentación técnica y guía de sustentación del proyecto Observatorio Académico EduMetrics.">
+<title>EduMetrics | Observatorio Académico</title>
+<style>
+:root{
+  --navy:#17324d;--blue:#16809a;--blue2:#e8f4f7;--ink:#263746;--muted:#657789;
+  --line:#dce5ec;--bg:#f4f7fa;--white:#fff;--orange:#e98a28;--red:#c84438;
+  --green:#27875b;--shadow:0 12px 32px rgba(23,50,77,.08)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 Inter,Segoe UI,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:linear-gradient(125deg,#102b45,#176d84);color:white;padding:58px max(22px,calc((100% - 1180px)/2)) 48px}
+header .eyebrow{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:#bce5ed;font-weight:700}
+header h1{font-size:clamp(2.2rem,5vw,4rem);line-height:1.05;margin:14px 0}
+header p{max-width:780px;color:#e0edf2;font-size:1.12rem;margin:0}
+.pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:25px}
+.pill{border:1px solid #ffffff55;border-radius:99px;padding:6px 12px;font-size:.82rem;color:#fff}
+.layout{max-width:1240px;margin:auto;padding:28px 22px;display:grid;grid-template-columns:255px minmax(0,1fr);gap:26px}
+nav{position:sticky;top:18px;align-self:start;background:white;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow);max-height:calc(100vh - 36px);overflow:auto}
+nav strong{display:block;color:var(--navy);margin:0 0 10px}
+nav a{display:block;padding:7px 9px;border-radius:8px;color:#536779;font-size:.9rem}
+nav a:hover{background:var(--blue2);text-decoration:none;color:var(--navy)}
+main{min-width:0}
+section{background:white;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,3vw,32px);margin-bottom:22px;box-shadow:var(--shadow);scroll-margin-top:18px}
+h2{font-size:1.65rem;color:var(--navy);margin:0 0 15px;line-height:1.2}
+h3{font-size:1.13rem;color:var(--navy);margin:25px 0 8px}
+h4{color:var(--navy);margin:18px 0 6px}
+p{margin:8px 0 13px}
+.lead{font-size:1.08rem;color:#52687b}
+.small{font-size:.88rem;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:#f8fbfd;border:1px solid var(--line);border-radius:12px;padding:16px}
+.card b{color:var(--navy)}
+.metric{font-size:1.9rem;font-weight:750;color:var(--navy);line-height:1.2}
+.label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.callout{border-left:4px solid var(--blue);background:#eef7fa;padding:14px 17px;border-radius:0 10px 10px 0;margin:16px 0}
+.warning{border-left-color:var(--orange);background:#fff7eb}
+.danger{border-left-color:var(--red);background:#fff2f0}
+.success{border-left-color:var(--green);background:#eff9f3}
+table{border-collapse:collapse;width:100%;margin:12px 0 18px;font-size:.93rem}
+th,td{border-bottom:1px solid var(--line);padding:10px 11px;text-align:left;vertical-align:top}
+th{background:#edf4f7;color:var(--navy);font-weight:700}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;padding:3px 8px;border-radius:99px;background:#e7f2f6;color:#17677c;font-size:.75rem;font-weight:700}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+details{border:1px solid var(--line);border-radius:11px;margin:10px 0;overflow:hidden}
+summary{cursor:pointer;padding:13px 16px;background:#f8fbfd;color:var(--navy);font-weight:700}
+details .inside{padding:4px 16px 15px}
+.question{border:1px solid var(--line);border-radius:12px;padding:17px;margin:12px 0}
+.question h3{margin:0 0 8px}
+.kicker{font-size:.77rem;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);font-weight:800}
+pre{white-space:pre-wrap;word-break:break-word;background:#142b40;color:#e5f3f7;padding:16px;border-radius:10px;overflow:auto;font-size:.86rem}
+footer{text-align:center;padding:28px;color:#718292;font-size:.85rem}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+button{border:0;border-radius:9px;background:var(--navy);color:white;padding:10px 15px;font-weight:700;cursor:pointer}
+button.secondary{background:#e7f0f4;color:var(--navy)}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto;max-height:none}.grid.three{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid,.grid.three{grid-template-columns:1fr}section{padding:18px}header{padding-top:42px}}
+@media print{body{background:white}.layout{display:block;max-width:none;padding:0}nav,.actions{display:none}section{box-shadow:none;break-inside:avoid;border:0;border-bottom:1px solid #ddd}header{background:#17324d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}a{color:inherit}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Documentación del proyecto · Business Intelligence</div>
+  <h1>EduMetrics<br>Observatorio Académico</h1>
+  <p>De los datos educativos a decisiones informadas: análisis del rendimiento, asistencia, participación y factores asociados al desempeño estudiantil mediante Power BI y validación estadística.</p>
+  <div class="pills">
+    <span class="pill">Power BI</span><span class="pill">ETL · Python</span>
+    <span class="pill">DAX</span><span class="pill">ANOVA y pruebas estadísticas</span>
+    <span class="pill">Python · pandas · scipy</span>
+    <span class="pill">PostgreSQL · Docker</span>
+    <span class="pill">480 registros</span>
+  </div>
+</header>
+
+<div class="layout">
+<nav aria-label="Índice del documento">
+  <strong>Contenido</strong>
+  <a href="#pitch">1. Pitch del proyecto</a>
+  <a href="#problema">2. Problema y objetivo</a>
+  <a href="#datos">3. Datos utilizados</a>
+  <a href="#etl">4. Proceso ETL</a>
+  <a href="#herramientas">5. Herramientas y librerías</a>
+  <a href="#modelo">6. Modelo de datos</a>
+  <a href="#dax">7. DAX y consultas analíticas</a>
+  <a href="#preguntas">8. Las 10 preguntas y respuestas</a>
+  <a href="#dashboard">9. Explicación de las páginas</a>
+  <a href="#tablero">10. Tablero en vivo</a>
+  <a href="#estadistica">11. ANOVA y validación</a>
+  <a href="#hallazgos">12. Hallazgos principales</a>
+  <a href="#limitaciones">13. Limitaciones y mejoras</a>
+  <a href="#guion">14. Guion para sustentar</a>
+  <a href="#glosario">15. Glosario</a>
+</nav>
+
+<main>
+<section id="pitch">
+  <div class="kicker">Presentación comercial</div>
+  <h2>1. Pitch: ¿cómo vendemos el proyecto?</h2>
+  <p class="lead"><b>EduMetrics – Observatorio Inteligente del Rendimiento Académico</b> es un prototipo de inteligencia de negocios que transforma datos educativos en información visual y estadística para apoyar decisiones académicas.</p>
+  <div class="callout success">
+    <b>Propuesta de valor</b><br>
+    Transformamos datos académicos en decisiones que impulsan el aprendizaje.
+  </div>
+  <h3>Pitch de 60–90 segundos</h3>
+  <p>Las instituciones educativas generan información sobre el desempeño, la asistencia y la participación de sus estudiantes, pero esos datos no siempre se convierten en decisiones oportunas. EduMetrics propone centralizar y analizar esa información mediante un tablero interactivo de inteligencia de negocios.</p>
+  <p>Con nuestro Observatorio Académico podemos comparar el rendimiento por materia, semestre, nivel, género y sección; identificar asignaturas con mayores porcentajes de estudiantes en nivel bajo; reconocer grupos con resultados sobresalientes; y explorar la relación entre asistencia, participación y desempeño.</p>
+  <p>Además, incorporamos análisis estadístico para evaluar si algunas diferencias entre grupos cuentan con evidencia estadística. El resultado es una herramienta que facilita la exploración de datos, ayuda a detectar señales de alerta y ofrece información para orientar acciones de acompañamiento académico.</p>
+  <p><b>EduMetrics no busca reemplazar la decisión de docentes o directivos: busca darles evidencia organizada para tomarla mejor.</b></p>
+  <div class="grid three">
+    <div class="card"><div class="label">Problema</div><b>Datos dispersos</b><p class="small">Cuesta identificar patrones y grupos que requieren atención.</p></div>
+    <div class="card"><div class="label">Solución</div><b>Tablero interactivo</b><p class="small">Indicadores, filtros, comparaciones y análisis estadístico.</p></div>
+    <div class="card"><div class="label">Beneficio</div><b>Decisiones informadas</b><p class="small">Priorizar seguimiento, apoyo y revisión de asignaturas.</p></div>
+  </div>
+  <p class="small">Posicionamiento honesto: se trata de un prototipo académico construido con un conjunto de datos público y adaptado; no es todavía un producto desplegado ni validado con datos institucionales reales.</p>
+</section>
+
+<section id="problema">
+  <div class="kicker">Contexto</div>
+  <h2>2. Problema, objetivo y alcance</h2>
+  <h3>Problema que se aborda</h3>
+  <p>La información de rendimiento, ausencias y actividad en plataformas educativas puede ser difícil de interpretar cuando se encuentra en registros separados o en tablas sin análisis integrado. Esto limita la identificación de patrones, diferencias entre grupos y señales que ameritan seguimiento.</p>
+  <h3>Objetivo general</h3>
+  <p>Implementar un flujo de análisis de datos que integre extracción, transformación y carga (ETL), modelado semántico, visualización en Power BI y validación estadística para explorar el rendimiento estudiantil y los factores asociados.</p>
+  <h3>Objetivos específicos</h3>
+  <ul>
+    <li>Preparar y organizar los registros del conjunto de datos educativo.</li>
+    <li>Construir un modelo dimensional que facilite el análisis por diferentes categorías.</li>
+    <li>Crear medidas DAX para indicadores, comparaciones, rankings y asociaciones.</li>
+    <li>Responder diez preguntas de análisis mediante visualizaciones del dashboard.</li>
+    <li>Complementar el análisis descriptivo con pruebas estadísticas e interpretación de resultados.</li>
+  </ul>
+</section>
+
+<section id="datos">
+  <div class="kicker">Fuente y diccionario</div>
+  <h2>3. Datos utilizados</h2>
+  <p>La fuente identificada en el proyecto es el conjunto de datos público <b>xAPI-Edu-Data</b>, disponible en Kaggle. El modelo contiene <b>480 registros de estudiantes</b>.</p>
+  <p><a href="https://www.kaggle.com/datasets/aljarah/xAPI-Edu-Data" target="_blank" rel="noopener">Consultar dataset xAPI-Edu-Data en Kaggle ↗</a></p>
+  <div class="callout warning"><b>Alcance de la fuente:</b> el dataset original corresponde a un contexto educativo escolar. El tablero utiliza algunos nombres adaptados al lenguaje universitario. No debe presentarse como una base real de universidades ni como evidencia de deserción universitaria.</div>
+  <h3>Adaptación de términos</h3>
+  <table>
+    <thead><tr><th>Campo o concepto original</th><th>Nombre usado en el tablero</th><th>Interpretación correcta</th></tr></thead>
+    <tbody>
+      <tr><td>Etapa escolar</td><td>Facultad / nivel educativo</td><td>Se usa como nivel educativo: Básico, Medio y Superior.</td></tr>
+      <tr><td>Grado</td><td>Programa / grado</td><td>Los grados 02 a 12 se usan como proxy de programa.</td></tr>
+      <tr><td>Sección</td><td>Cohorte / sección</td><td>Grupos A, B y C.</td></tr>
+      <tr><td>Topic</td><td>Materia</td><td>Asignaturas como Arabic, Biology, IT, Math, etc.</td></tr>
+      <tr><td>Class L/M/H</td><td>Rendimiento Bajo/Medio/Alto</td><td>Categorías ordinales de desempeño.</td></tr>
+      <tr><td>Days of absence</td><td>Ausencias / asistencia</td><td>Se utiliza el número de ausencias como señal relacionada con asistencia.</td></tr>
+    </tbody>
+  </table>
+  <h3>Variables analizadas</h3>
+  <ul>
+    <li><b>Rendimiento:</b> categoría Bajo, Medio o Alto.</li>
+    <li><b>Nota aproximada:</b> recodificación de categorías: Bajo = 60, Medio = 80 y Alto = 95.</li>
+    <li><b>Asistencia:</b> número de ausencias; se usa el umbral de siete ausencias.</li>
+    <li><b>Participación:</b> manos levantadas, recursos visitados, anuncios vistos y actividad en foros.</li>
+    <li><b>Segmentación:</b> género, nivel educativo, grado, materia, semestre y sección.</li>
+  </ul>
+  <div class="callout danger"><b>Nota metodológica:</b> 60, 80 y 95 no son calificaciones originales del estudiante. Son valores asignados a las tres categorías de rendimiento. Por eso el indicador debe llamarse “nota aproximada” o “puntaje proxy”, no nota real ni promedio oficial.</div>
+</section>
+
+<section id="etl">
+  <div class="kicker">Preparación de datos</div>
+  <h2>4. Proceso ETL: extracción, transformación y carga</h2>
+  <div class="grid three">
+    <div class="card"><span class="tag">E · Extract</span><h3>Extracción</h3><p>Lectura del archivo <code>xAPI-Edu-Data.csv</code> con <code>pandas.read_csv()</code>. Se validan columnas esperadas, se reportan nulos y duplicados.</p></div>
+    <div class="card"><span class="tag">T · Transform</span><h3>Transformación</h3><p>Limpieza de texto, renombrado de columnas al español, creación de campos derivados e indicadores calculados en Python.</p></div>
+    <div class="card"><span class="tag">L · Load</span><h3>Carga</h3><p>Escritura de 8 archivos CSV en la carpeta <code>salida/</code> listos para importar en Power BI, y carga opcional en PostgreSQL vía Docker.</p></div>
+  </div>
+
+  <h3>Script: <code>01_etl.py</code></h3>
+  <p>El ETL está implementado en Python puro con cuatro funciones principales:</p>
+  <table>
+    <thead><tr><th>Función</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><code>extraer(ruta)</code></td><td>Lee el CSV con <code>pandas.read_csv()</code>, valida que existan las 17 columnas esperadas y aborta si falta alguna.</td></tr>
+      <tr><td><code>calidad(df)</code></td><td>Reporta nulos por columna, duplicados exactos y rangos fuera de escala en las métricas (0–100).</td></tr>
+      <tr><td><code>transformar(df)</code></td><td>Limpia texto, renombra columnas, mapea códigos y calcula todos los campos derivados.</td></tr>
+      <tr><td><code>cargar(df, carpeta)</code></td><td>Genera las 7 dimensiones y <code>Fact_Desempeno.csv</code> con claves surrogadas (<code>SK_*</code>).</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Transformaciones aplicadas</h3>
+  <ul>
+    <li><code>Nota_Ordinal</code>: Bajo = 1, Medio = 2, Alto = 3 — para ordenar niveles en gráficos.</li>
+    <li><code>Nota_Aproximada</code>: Bajo = 60, Medio = 80, Alto = 95 — punto medio de cada banda para calcular promedios.</li>
+    <li><code>Es_Reprobado</code>: 1 cuando nivel es Bajo (flag binario con <code>numpy.where</code>).</li>
+    <li><code>Es_Sobresaliente</code>: 1 cuando nivel es Alto.</li>
+    <li><code>Es_Riesgo_Desercion</code>: 1 cuando nivel es Bajo <b>y</b> ausencias ≥ 7 (proxy).</li>
+    <li><code>Indice_Participacion</code>: promedio de las 4 métricas de actividad en el LMS.</li>
+    <li><code>Rango_Participacion</code>: intervalos 0–25, 26–50, 51–75, 76–100 con <code>pandas.cut()</code>.</li>
+    <li>Traducción de códigos: género M/F → Masculino/Femenino, semestre F/S → Primer/Segundo semestre, etc.</li>
+  </ul>
+
+  <h3>Modelo estrella generado</h3>
+  <pre>Dim_Facultad   (3 filas)   ──┐
+Dim_Programa   (11 filas)  ──┤
+Dim_Materia    (12 filas)  ──┤
+Dim_Semestre   (2 filas)   ──┼──► Fact_Desempeno (480 filas · 22 columnas)
+Dim_Cohorte    (3 filas)   ──┤
+Dim_Genero     (2 filas)   ──┤
+Dim_Estudiante (480 filas) ──┘</pre>
+
+  <h3>Carga en PostgreSQL (opcional)</h3>
+  <p>El script <code>03_carga_postgres.py</code> lee los CSV de <code>salida/</code> y los inserta en una base de datos PostgreSQL 16 levantada con Docker Compose. El esquema SQL (<code>sql/init.sql</code>) define tablas, claves foráneas, índices y 5 vistas analíticas equivalentes a los requerimientos del tablero.</p>
+  <div class="callout warning"><b>¿Por qué el Power BI no conecta a PostgreSQL?</b> Power BI Service requiere un Data Gateway instalado en un servidor con IP pública para mantener conexión en vivo con una base de datos local. Para el despliegue público del tablero se usaron los CSV directamente, que no necesitan gateway. La base de datos existe y está documentada como evidencia del componente de carga.</div>
+
+  <h3>Ejecución</h3>
+  <pre>pip install pandas numpy scipy statsmodels psycopg2-binary sqlalchemy
+
+# 1. ETL
+python 01_etl.py --entrada xAPI-Edu-Data.csv --salida salida
+
+# 2. ANOVA
+python 02_anova.py --entrada salida/dataset_limpio.csv --salida salida
+
+# 3. Base de datos (opcional)
+docker compose up -d
+python 03_carga_postgres.py --salida salida</pre>
+</section>
+
+<section id="herramientas">
+  <div class="kicker">Stack tecnológico</div>
+  <h2>5. Herramientas, lenguajes y librerías</h2>
+  <table>
+    <thead><tr><th>Herramienta / lenguaje</th><th>Uso en el proyecto</th><th>Estado de evidencia</th></tr></thead>
+    <tbody>
+      <tr><td><b>Power BI Desktop</b></td><td>Modelo semántico, relaciones, medidas y dashboard de cuatro páginas.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
+      <tr><td><b>Power Query (lenguaje M)</b></td><td>Conexión a CSV, preparación y transformación de datos mediante consultas.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
+      <tr><td><b>DAX</b></td><td>36 medidas para indicadores, comparaciones, rankings y correlación.</td><td><span class="tag">Comprobado en PBIX</span></td></tr>
+      <tr><td><b>CSV</b></td><td>Formato de archivos de entrada y tabla de resultados estadísticos.</td><td><span class="tag">Comprobado</span></td></tr>
+      <tr><td><b>Pruebas estadísticas</b></td><td>ANOVA, Shapiro-Wilk, Levene, Kruskal-Wallis y prueba t de Welch en las comparaciones documentadas.</td><td><span class="tag">Resultados presentes</span></td></tr>
+      <tr><td><b>Python / librerías externas</b></td><td>El análisis revisado indica que los resultados estadísticos se generaron externamente, pero el PBIX no identifica el lenguaje ni los paquetes concretos.</td><td><span class="tag">No confirmado</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout warning"><b>Importante sobre “librerías”:</b> no es correcto afirmar que se utilizó pandas, NumPy, SciPy, statsmodels, Matplotlib o Seaborn sin revisar el script o el archivo de dependencias que generó los resultados. Esos paquetes son opciones habituales para análisis estadístico en Python, pero no están acreditados por el PBIX inspeccionado. Si el equipo sí utilizó alguno, agreguen el nombre y adjunten el script como evidencia.</div>
+  <h3>Funciones y recursos DAX identificados</h3>
+  <p>En las medidas se identifican funciones como:</p>
+  <div class="grid">
+    <div class="card"><b>CALCULATE</b><p class="small">Evalúa una expresión modificando el contexto de filtros.</p></div>
+    <div class="card"><b>DIVIDE</b><p class="small">Realiza divisiones de forma segura, evitando errores por divisor cero.</p></div>
+    <div class="card"><b>REMOVEFILTERS</b><p class="small">Retira filtros específicos; se usa en comparaciones semestrales.</p></div>
+    <div class="card"><b>RANKX</b><p class="small">Calcula posiciones para rankings de programas y materias.</p></div>
+    <div class="card"><b>TOPN</b><p class="small">Selecciona los primeros N registros según un criterio.</p></div>
+    <div class="card"><b>ALLSELECTED</b><p class="small">Mantiene parte del contexto de selección para rankings y comparaciones.</p></div>
+    <div class="card"><b>CONTAINS</b><p class="small">Comprueba pertenencia a una tabla; participa en el filtro del Top 10.</p></div>
+    <div class="card"><b>SUMX</b><p class="small">Evalúa una expresión fila por fila; se usa en la correlación manual.</p></div>
+  </div>
+</section>
+
+<section id="modelo">
+  <div class="kicker">Modelo semántico</div>
+  <h2>6. Modelo de datos</h2>
+  <p>El PBIX contiene un modelo tipo estrella: una tabla de hechos central y dimensiones relacionadas. Las relaciones son de muchos a uno, con filtrado desde las dimensiones hacia la tabla de hechos.</p>
+  <table>
+    <thead><tr><th>Tabla</th><th>Filas</th><th>Función</th></tr></thead>
+    <tbody>
+      <tr><td><code>Fact_Desempeno</code></td><td>480</td><td>Tabla de hechos; registros de desempeño y variables de actividad.</td></tr>
+      <tr><td><code>Dim_Facultad</code></td><td>3</td><td>Clasificación por nivel educativo.</td></tr>
+      <tr><td><code>Dim_Programa</code></td><td>11</td><td>Grados utilizados como proxy de programa.</td></tr>
+      <tr><td><code>Dim_Materia</code></td><td>12</td><td>Asignaturas o temas.</td></tr>
+      <tr><td><code>Dim_Semestre</code></td><td>2</td><td>Semestres con columna de orden.</td></tr>
+      <tr><td><code>Dim_Cohorte</code></td><td>3</td><td>Secciones A, B y C.</td></tr>
+      <tr><td><code>Dim_Genero</code></td><td>2</td><td>Femenino y masculino.</td></tr>
+      <tr><td><code>Dim_Estudiante</code></td><td>480</td><td>Atributos descriptivos de cada estudiante.</td></tr>
+      <tr><td><code>_Medidas</code></td><td>1</td><td>Tabla contenedora de medidas DAX.</td></tr>
+      <tr><td><code>resultados_anova</code></td><td>8</td><td>Resultados estadísticos estáticos.</td></tr>
+    </tbody>
+  </table>
+  <h3>¿Cómo viaja un filtro?</h3>
+  <ol>
+    <li>El usuario selecciona, por ejemplo, una materia en un segmentador.</li>
+    <li>La dimensión correspondiente filtra las filas relacionadas de <code>Fact_Desempeno</code>.</li>
+    <li>Las medidas DAX se evalúan sobre el conjunto filtrado.</li>
+    <li>Las tarjetas, tablas y gráficos actualizan sus resultados, salvo medidas que retiren filtros intencionalmente.</li>
+  </ol>
+  <div class="callout">Las cuatro segmentaciones principales son nivel educativo, semestre, género y sección. Están sincronizadas entre las cuatro páginas del reporte.</div>
+</section>
+
+<section id="dax">
+  <div class="kicker">Consultas y cálculos</div>
+  <h2>7. Consultas analíticas y medidas DAX</h2>
+  <p>En este proyecto, las “consultas” de análisis se expresan como preguntas de negocio respondidas por visualizaciones y medidas DAX. No se documenta una capa de consultas SQL. Las 36 medidas están organizadas en carpetas de resumen, resultados, asistencia y participación.</p>
+  <h3>Familias de medidas identificadas</h3>
+  <table>
+    <thead><tr><th>Familia</th><th>Medidas / cálculos identificados</th><th>Propósito</th></tr></thead>
+    <tbody>
+      <tr><td>Conteos y promedios</td><td><code>Total Estudiantes</code>, <code>Promedio Nota</code></td><td>Medir tamaño de población y promedio aproximado.</td></tr>
+      <tr><td>Porcentajes</td><td>Tasas de reprobación, riesgo de deserción y sobresalientes.</td><td>Calcular proporciones sobre el total del contexto actual.</td></tr>
+      <tr><td>Comparación semestral</td><td>Medidas de semestre 1 y 2, <code>Variacion Semestral</code>, <code>Tendencia Texto</code></td><td>Comparar promedios y etiquetar el cambio.</td></tr>
+      <tr><td>Comparación por género</td><td>Promedios femenino y masculino, brecha F − M.</td><td>Comparar promedios entre los dos grupos.</td></tr>
+      <tr><td>Rankings</td><td><code>Ranking Programa</code>, <code>Ranking Reprobacion Materia</code>, <code>Tasa Reprobacion Top 10</code></td><td>Ordenar programas y materias; seleccionar diez materias.</td></tr>
+      <tr><td>Semáforo</td><td><code>Color Semaforo Reprobacion</code></td><td>Rojo desde 40%, ámbar desde 25% y verde por debajo.</td></tr>
+      <tr><td>Estadística</td><td><code>Correlacion Participacion vs Nota</code></td><td>Calcular correlación de Pearson mediante una expresión DAX con <code>SUMX</code>.</td></tr>
+    </tbody>
+  </table>
+  <h3>Ejemplos conceptuales de los cálculos</h3>
+  <p>Las siguientes expresiones son fórmulas explicativas equivalentes en concepto; no se presentan como copia literal de todas las medidas del PBIX.</p>
+  <h4>Porcentaje de reprobación</h4>
+  <pre>Porcentaje de reprobación =
+DIVIDE(
+    Estudiantes en nivel Bajo,
+    Total de estudiantes,
+    0
+) * 100</pre>
+  <h4>Variación entre semestres</h4>
+  <pre>Variación semestral =
+Promedio del segundo semestre
+- Promedio del primer semestre</pre>
+  <h4>Brecha entre grupos</h4>
+  <pre>Brecha F - M =
+Promedio femenino
+- Promedio masculino</pre>
+  <h4>Correlación</h4>
+  <pre>Correlación de Pearson:
+r = cov(X,Y) / (desviación estándar de X
+               × desviación estándar de Y)</pre>
+  <div class="callout warning"><b>Comportamiento de filtros:</b> las medidas semestrales usan <code>REMOVEFILTERS(Dim_Semestre)</code> para recuperar cada semestre aunque el segmentador cambie. Las comparaciones de género también fijan cada grupo con <code>CALCULATE</code>. Por ello, ciertas tarjetas comparativas pueden no responder a todos los segmentadores de la misma manera que otros gráficos.</div>
+</section>
+
+<section id="preguntas">
+  <div class="kicker">Preguntas de negocio</div>
+  <h2>8. Las 10 preguntas, sus respuestas y dónde se aplican</h2>
+  <p>Esta sección conecta cada pregunta de la presentación con la página, la visualización, el resultado que puede comunicarse y la utilidad para una institución.</p>
+
+  <div class="question">
+    <h3>1. ¿Cuál es el promedio de notas por materia y semestre?</h3>
+    <p><span class="tag">Página 2 · Desempeño académico</span> <b>Visual:</b> matriz “Nota aproximada por materia y semestre”.</p>
+    <p><b>Cómo se responde:</b> agrupa los registros por materia y semestre, calcula el promedio del puntaje aproximado y permite comparar las columnas de ambos semestres.</p>
+    <p><b>Hallazgos de ejemplo:</b> Biology presenta 85.33 en ambos semestres; English pasa de 79.11 a 84.71; Math pasa de 74.06 a 89.00.</p>
+    <p><b>Aplicación:</b> identificar asignaturas con promedios altos o diferencias entre grupos semestrales y priorizar una revisión pedagógica.</p>
+    <p class="small">Precaución: el puntaje es una recodificación de Bajo/Medio/Alto, no una nota real.</p>
+  </div>
+
+  <div class="question">
+    <h3>2. ¿Cuál es la tasa de deserción por facultad?</h3>
+    <p><span class="tag">Página 3 · Comparativas</span> <b>Visual:</b> “Riesgo de deserción por nivel · proxy”.</p>
+    <p><b>Cómo se responde:</b> agrupa por nivel educativo y calcula el porcentaje de registros clasificados en nivel Bajo y con siete o más ausencias.</p>
+    <p><b>Resultados:</b> Básico 30.2%, Medio 19.4%, Superior 24.2%.</p>
+    <p><b>Aplicación:</b> orientar el seguimiento hacia el nivel con mayor proporción de señales de alerta.</p>
+    <p class="small">Precaución: el dataset no registra deserción real. El tablero muestra un proxy definido por el propio proyecto.</p>
+  </div>
+
+  <div class="question">
+    <h3>3. ¿Cómo es el desempeño por género?</h3>
+    <p><span class="tag">Página 3 · Comparativas</span> <b>Visuales:</b> “Nota aproximada por género” y tarjeta “Brecha F − M”.</p>
+    <p><b>Cómo se responde:</b> calcula el promedio aproximado por grupo y resta el promedio masculino al femenino.</p>
+    <p><b>Resultados:</b> Femenino 83.69; Masculino 76.54; brecha mostrada 7.14 puntos. La reprobación reportada es 13.7% frente a 33.8%.</p>
+    <p><b>Aplicación:</b> detectar diferencias entre grupos y estudiar variables relacionadas, como la asistencia.</p>
+    <p class="small">Precaución: es una diferencia descriptiva; no demuestra que el género cause el resultado. En la muestra, las ausencias también difieren entre grupos.</p>
+  </div>
+
+  <div class="question">
+    <h3>4. ¿Cómo se compara el rendimiento entre programas?</h3>
+    <p><span class="tag">Página 3 · Comparativas</span> <b>Visuales:</b> “Comparativa por grado · proxy de programa” y “Ranking de programas”.</p>
+    <p><b>Cómo se responde:</b> agrupa por grado, calcula el promedio aproximado y ordena los grupos con una medida de ranking.</p>
+    <p><b>Resultados visibles:</b> Grado 06 registra 85.31 y Grado 11 registra 83.85; Grado 05 muestra 60.00, pero tiene solo 3 estudiantes.</p>
+    <p><b>Aplicación:</b> comparar grupos y detectar dónde podría requerirse acompañamiento adicional.</p>
+    <p class="small">Precaución: los grados no son programas universitarios reales y los tamaños pequeños vuelven inestables algunos rankings.</p>
+  </div>
+
+  <div class="question">
+    <h3>5. ¿Qué tendencias existen en el rendimiento por semestre?</h3>
+    <p><span class="tag">Página 2 · Desempeño académico</span> <b>Visuales:</b> “Comparación entre semestres”, tarjeta “Cambio S2 − S1” y texto de tendencia.</p>
+    <p><b>Cómo se responde:</b> compara los promedios de cada semestre y calcula S2 menos S1.</p>
+    <p><b>Resultado:</b> Primer semestre 77.51; segundo semestre 80.85; diferencia +3.34 puntos.</p>
+    <p><b>Aplicación:</b> describir diferencias entre los dos conjuntos de registros y detectar materias que cambian entre semestres.</p>
+    <p class="small">Precaución: no es una evolución longitudinal de los mismos estudiantes. La composición de materias cambia entre semestres; el promedio ajustado entre materias comunes es aproximadamente +2.3 puntos.</p>
+  </div>
+
+  <div class="question">
+    <h3>6. ¿Cuáles son las 10 asignaturas con mayor reprobación?</h3>
+    <p><span class="tag">Página 2 · Desempeño académico</span> <b>Visual:</b> “Top 10 materias por tasa de reprobación”.</p>
+    <p><b>Cómo se responde:</b> calcula el porcentaje de nivel Bajo por materia, ordena los resultados y utiliza <code>TOPN</code>, <code>RANKX</code>, <code>ALLSELECTED</code> y <code>CONTAINS</code> para limitar el visual a diez.</p>
+    <p><b>Resultados:</b> IT 40.0%; Chemistry 33.3%; Math 33.3%; Spanish 32.0%; Arabic 28.8%.</p>
+    <p><b>Aplicación:</b> priorizar revisión de contenidos, estrategias de enseñanza y apoyos en las asignaturas con mayores tasas.</p>
+  </div>
+
+  <div class="question">
+    <h3>7. ¿Qué relación existe entre asistencia y rendimiento?</h3>
+    <p><span class="tag">Página 4 · Factores de éxito</span> <b>Visual:</b> “Asistencia y nota aproximada” y tarjeta “Diferencia de asistencia”.</p>
+    <p><b>Cómo se responde:</b> compara el promedio aproximado de quienes tienen menos de siete ausencias con quienes tienen siete o más.</p>
+    <p><b>Resultados:</b> menos de 7 ausencias: 86.40; 7 o más: 68.17; diferencia: 18.23 puntos.</p>
+    <p><b>Aplicación:</b> justificar seguimiento de asistencia y acompañamiento temprano.</p>
+    <p class="small">Precaución: la asociación no demuestra causalidad.</p>
+  </div>
+
+  <div class="question">
+    <h3>8. ¿Quiénes presentan desempeño sobresaliente?</h3>
+    <p><span class="tag">Página 1 y página 2</span> <b>Visuales:</b> tarjeta “Sobresalientes · nivel Alto”, distribución de rendimiento y tabla “Sobresalientes por materia”.</p>
+    <p><b>Cómo se responde:</b> clasifica como sobresalientes los registros cuyo nivel es Alto y calcula su cantidad y proporción.</p>
+    <p><b>Resultado:</b> 142 estudiantes, equivalentes al 29.6% de los registros. La tabla desglosa la cantidad y el porcentaje por materia.</p>
+    <p><b>Aplicación:</b> reconocer fortalezas, identificar materias con mayor proporción de nivel alto y diseñar estrategias de enriquecimiento.</p>
+    <p class="small">El tablero presenta resultados agregados por materia; no se confirma un listado nominal de estudiantes.</p>
+  </div>
+
+  <div class="question">
+    <h3>9. ¿Cómo se comparan los resultados entre cohortes?</h3>
+    <p><span class="tag">Página 3 · Comparativas</span> <b>Visual:</b> “Distribución del rendimiento por sección”.</p>
+    <p><b>Cómo se responde:</b> compara la proporción de niveles Bajo, Medio y Alto en las secciones A, B y C mediante columnas apiladas al 100%.</p>
+    <p><b>Resultados visibles:</b> sección B tiene 31.74% en nivel Alto; sección C tiene 56.67% en nivel Medio.</p>
+    <p><b>Aplicación:</b> reconocer diferencias en la composición del rendimiento entre grupos y orientar acciones específicas.</p>
+    <p class="small">Precaución: el dataset usa secciones A, B y C; llamarlas cohortes es una adaptación del proyecto.</p>
+  </div>
+
+  <div class="question">
+    <h3>10. ¿Qué factores influyen en el éxito académico?</h3>
+    <p><span class="tag">Página 4 · Factores de éxito</span> <b>Visuales:</b> asistencia y nota, correlación participación y nota, sobresalientes por rango de participación, actividad promedio por rendimiento y tabla ANOVA.</p>
+    <p><b>Cómo se responde:</b> se exploran asociaciones entre ausencias, participación en el LMS y puntaje aproximado, y se contrastan diferencias entre grupos con pruebas estadísticas.</p>
+    <p><b>Resultados:</b> correlación participación–nota de 0.697; los rangos 76–100 de participación presentan 62.3% de sobresalientes; el grupo con menos de siete ausencias promedia 86.40.</p>
+    <p><b>Aplicación:</b> promover participación, monitorear ausencias y diseñar acciones de apoyo basadas en señales observadas.</p>
+    <p class="small">Precaución: los datos muestran asociaciones; no permiten concluir por sí solos que una actividad cause mejores notas.</p>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="kicker">Recorrido del tablero</div>
+  <h2>9. ¿Qué contiene cada página del dashboard?</h2>
+  <details open>
+    <summary>Página 1 · Resumen ejecutivo / Rendimiento académico</summary>
+    <div class="inside">
+      <p><b>Objetivo:</b> mostrar el estado general de la población.</p>
+      <ul><li>Segmentadores: nivel educativo, semestre, género y sección.</li><li>Tarjetas: estudiantes, nota aproximada, reprobación, riesgo proxy y sobresalientes.</li><li>Gráfico de anillo: distribución Bajo/Medio/Alto.</li><li>Barras: promedio aproximado por nivel educativo.</li></ul>
+      <p><b>Mensaje principal:</b> 480 registros, promedio aproximado 79.15, 26.5% en nivel Bajo y 29.6% en nivel Alto.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Página 2 · Desempeño académico</summary>
+    <div class="inside">
+      <p><b>Objetivo:</b> analizar materias y comparar semestres.</p>
+      <ul><li>Matriz materia × semestre.</li><li>Comparación de promedios semestrales y diferencia S2 − S1.</li><li>Top 10 de materias por tasa de nivel Bajo.</li><li>Tabla de sobresalientes por materia.</li></ul>
+      <p><b>Mensaje principal:</b> IT presenta 40% de nivel Bajo y el promedio del segundo semestre es 3.34 puntos mayor en la comparación descriptiva.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Página 3 · Comparativas entre grupos</summary>
+    <div class="inside">
+      <p><b>Objetivo:</b> comparar los grupos según nivel educativo, género, grado y sección.</p>
+      <ul><li>Riesgo proxy por nivel educativo.</li><li>Nota aproximada por género y brecha F − M.</li><li>Comparativa por grado y ranking.</li><li>Distribución porcentual del rendimiento por sección.</li></ul>
+      <p><b>Mensaje principal:</b> las diferencias descriptivas permiten localizar grupos para investigar con mayor profundidad.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Página 4 · Factores de éxito académico</summary>
+    <div class="inside">
+      <p><b>Objetivo:</b> explorar la relación entre asistencia, participación y rendimiento.</p>
+      <ul><li>Promedio según rangos de ausencias.</li><li>Correlación de participación y nota aproximada.</li><li>Porcentaje de sobresalientes por rango de participación.</li><li>Actividad promedio por nivel de rendimiento.</li><li>Tabla estática con resultados estadísticos.</li></ul>
+      <p><b>Mensaje principal:</b> asistencia y participación muestran asociaciones relevantes con el rendimiento en esta muestra, sin probar causalidad.</p>
+    </div>
+  </details>
+  <h3>Cómo funcionan los filtros</h3>
+  <p>Los segmentadores filtran los registros relacionados en el modelo y recalculan las medidas DAX. Sin embargo, algunas medidas están diseñadas para ignorar filtros concretos: las medidas de semestre retiran el filtro de semestre y las comparaciones de género fijan cada grupo. La tabla <code>resultados_anova</code> es estática y no se recalcula con los segmentadores.</p>
+</section>
+
+<section id="tablero">
+  <div class="kicker">Tablero publicado</div>
+  <h2>10. Tablero en vivo · Power BI</h2>
+  <p class="lead">El tablero está publicado en <b>Power BI Service</b> y embebido a continuación. Puedes usar los segmentadores directamente desde esta página.</p>
+  <div style="border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(23,50,77,.13);margin:16px 0;">
+    <iframe
+      title="Rendimiento Académico — Observatorio EduMetrics"
+      width="100%"
+      height="600"
+      src="https://app.powerbi.com/view?r=eyJrIjoiMTE0NGRmOWEtMDc2ZS00M2RmLWJjMDYtMzM3MzM1NDI5YzI4IiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9"
+      frameborder="0"
+      allowfullscreen="true"
+      style="display:block;">
+    </iframe>
+  </div>
+  <div class="grid" style="margin-top:14px;">
+    <div class="card"><span class="tag">Página 1</span><b>Resumen ejecutivo</b><p class="small">KPIs globales, distribución de rendimiento y nota por nivel educativo.</p></div>
+    <div class="card"><span class="tag">Página 2</span><b>Desempeño académico</b><p class="small">Matriz materia × semestre, top 10 reprobación con semáforo y sobresalientes.</p></div>
+    <div class="card"><span class="tag">Página 3</span><b>Comparativas</b><p class="small">Deserción por nivel, nota por género, ranking de programas y distribución por sección.</p></div>
+    <div class="card"><span class="tag">Página 4</span><b>Factores de éxito</b><p class="small">Asistencia vs nota, correlación de participación, actividad por nivel y tabla ANOVA.</p></div>
+  </div>
+  <p class="small" style="margin-top:12px;">Los cuatro segmentadores (Nivel educativo, Semestre, Género, Sección) están sincronizados entre todas las páginas. La tabla ANOVA de la página 4 es estática y no responde a los filtros.</p>
+</section>
+
+<section id="estadistica">
+  <div class="kicker">Validación estadística</div>
+  <h2>11. ANOVA y pruebas estadísticas</h2>
+  <h3>¿Para qué se incluye?</h3>
+  <p>El análisis estadístico complementa las gráficas descriptivas. Permite evaluar si las diferencias de medias observadas entre grupos son compatibles con la hipótesis de igualdad o si existe evidencia de diferencias.</p>
+  <h3>Hipótesis generales</h3>
+  <ul>
+    <li><b>H₀:</b> las medias de los grupos comparados son iguales.</li>
+    <li><b>H₁:</b> al menos una media de grupo es diferente.</li>
+  </ul>
+  <h3>Pruebas documentadas en el análisis</h3>
+  <table>
+    <thead><tr><th>Prueba</th><th>Función</th><th>Lectura general</th></tr></thead>
+    <tbody>
+      <tr><td>ANOVA</td><td>Compara medias entre grupos.</td><td>Un p menor a 0.05 aporta evidencia contra H₀.</td></tr>
+      <tr><td>Shapiro-Wilk</td><td>Evalúa compatibilidad con normalidad.</td><td>Un p pequeño puede indicar desviación de normalidad.</td></tr>
+      <tr><td>Levene</td><td>Evalúa homogeneidad de varianzas.</td><td>Un p pequeño sugiere varianzas diferentes.</td></tr>
+      <tr><td>Kruskal-Wallis</td><td>Alternativa no paramétrica para comparar grupos.</td><td>Evalúa diferencias en distribuciones/rangos entre grupos.</td></tr>
+      <tr><td>t de Welch</td><td>Compara dos medias sin asumir varianzas iguales.</td><td>En la fila de género, el estadístico F mostrado corresponde a t².</td></tr>
+    </tbody>
+  </table>
+  <h3>Resultados que aparecen en la tabla del dashboard</h3>
+  <table>
+    <thead><tr><th>Variable</th><th>Factor</th><th>F mostrado</th><th>p mostrado</th><th>Conclusión documentada</th></tr></thead>
+    <tbody>
+      <tr><td>Anuncios vistos</td><td>Nivel de rendimiento</td><td>98.73</td><td>1.32E-30</td><td>Diferencias significativas</td></tr>
+      <tr><td>Manos levantadas</td><td>Nivel de rendimiento</td><td>176.39</td><td>4.51E-58</td><td>Diferencias significativas</td></tr>
+      <tr><td>Nota aproximada</td><td>Facultad / nivel</td><td>2.33</td><td>9.79E-02</td><td>Sin evidencia de diferencias</td></tr>
+      <tr><td>Nota aproximada</td><td>Género</td><td>37.56</td><td>2.14E-09</td><td>Diferencias significativas</td></tr>
+      <tr><td>Nota aproximada</td><td>Materia</td><td>2.41</td><td>6.36E-03</td><td>Diferencias significativas</td></tr>
+      <tr><td>Nota aproximada</td><td>Programa / grado</td><td>2.13</td><td>2.56E-02</td><td>Diferencias significativas</td></tr>
+      <tr><td>Participación en foros</td><td>Nivel de rendimiento</td><td>25.25</td><td>3.76E-11</td><td>Diferencias significativas</td></tr>
+      <tr><td>Recursos visitados</td><td>Nivel de rendimiento</td><td>230.47</td><td>9.17E-71</td><td>Diferencias significativas</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warning"><b>Interpretación y rigor:</b> la tabla del reporte contiene ocho resultados precalculados y estáticos. La fila de género corresponde a una prueba t de Welch expresada como F = t², no a una ANOVA clásica. El resultado de nivel/facultad (p ≈ 0.098) no es significativo al 5%. Los p-valores extremadamente pequeños deben mostrarse como “p &lt; 0.001” cuando el archivo los haya redondeado a cero, no como cero exacto.</div>
+  <p><b>Tamaño del efecto:</b> η² (eta cuadrado) expresa la proporción de variabilidad asociada al factor dentro del análisis. No es lo mismo que el valor p: el valor p informa sobre evidencia estadística y η² sobre magnitud del efecto.</p>
+  <p><b>Conclusión estadística prudente:</b> existen diferencias estadísticamente significativas en varias comparaciones de la tabla, pero su interpretación depende de los supuestos, el tamaño de los grupos y la naturaleza aproximada de la variable de nota.</p>
+</section>
+
+<section id="hallazgos">
+  <div class="kicker">Resultados ejecutivos</div>
+  <h2>12. Hallazgos principales</h2>
+  <div class="grid three">
+    <div class="card"><div class="metric">480</div><div class="label">Registros</div></div>
+    <div class="card"><div class="metric">79.15</div><div class="label">Puntaje promedio proxy</div></div>
+    <div class="card"><div class="metric">26.5%</div><div class="label">Nivel bajo</div></div>
+    <div class="card"><div class="metric">24.2%</div><div class="label">Riesgo proxy</div></div>
+    <div class="card"><div class="metric">29.6%</div><div class="label">Nivel alto</div></div>
+    <div class="card"><div class="metric">0.697</div><div class="label">Correlación participación–nota</div></div>
+  </div>
+  <ul>
+    <li><b>Asistencia:</b> menos de siete ausencias se asocia con promedio 86.40; siete o más, con 68.17.</li>
+    <li><b>Participación:</b> correlación de Pearson cercana a 0.70 con el puntaje aproximado.</li>
+    <li><b>Género:</b> promedio femenino 83.69 y masculino 76.54; diferencia descriptiva cercana a 7.14 puntos.</li>
+    <li><b>Materias:</b> IT presenta 40% de nivel Bajo y Biology tiene promedio aproximado de 85.3.</li>
+    <li><b>Nivel educativo:</b> Básico presenta promedio cercano a 77.6 y 32.7% de reprobación.</li>
+    <li><b>Semestres:</b> S2 supera a S1 por 3.34 puntos en la comparación global; no es una medición de progreso individual.</li>
+  </ul>
+</section>
+
+<section id="limitaciones">
+  <div class="kicker">Transparencia y próximos pasos</div>
+  <h2>13. Limitaciones y mejoras recomendadas</h2>
+  <ol>
+    <li><b>Fuente escolar:</b> describir el proyecto como análisis de datos educativos, no como medición real de universidades.</li>
+    <li><b>Nota proxy:</b> reemplazar la codificación 60/80/95 por calificaciones reales si se dispone de ellas; mientras tanto, rotular claramente como puntaje aproximado.</li>
+    <li><b>Deserción proxy:</b> no llamarla tasa de deserción real. Para medir abandono se requieren registros reales de retiro o continuidad.</li>
+    <li><b>Comparación semestral:</b> no decir “los estudiantes mejoraron”; son grupos y composiciones diferentes. Comparar materias comunes o cohortes longitudinales si se dispone de identificadores y fechas.</li>
+    <li><b>Grupos pequeños:</b> interpretar con cautela rankings de grados con pocos registros, por ejemplo Grado 05 con 3 estudiantes.</li>
+    <li><b>ANOVA:</b> explicar pruebas, supuestos y alternativas; separar la prueba t de Welch de ANOVA y reportar p-valores pequeños como p &lt; 0.001.</li>
+    <li><b>ANOVA estática:</b> recalcular resultados con filtros o dejar explícito que corresponden a la muestra global.</li>
+    <li><b>Ruta de datos:</b> eliminar dependencia de una ruta absoluta local y probar actualización en otro equipo.</li>
+    <li><b>Documentación de librerías:</b> adjuntar script estadístico y archivo de dependencias para identificar y demostrar los paquetes externos usados.</li>
+    <li><b>Privacidad y despliegue:</b> antes de usar datos institucionales reales, definir permisos, anonimización y políticas de acceso.</li>
+  </ol>
+</section>
+
+<section id="guion">
+  <div class="kicker">Defensa oral</div>
+  <h2>14. Guion breve para sustentar</h2>
+  <h3>Introducción</h3>
+  <p>«Nuestro proyecto se llama EduMetrics, Observatorio Académico. Su propósito es transformar datos educativos en información útil para comprender el rendimiento estudiantil y explorar factores asociados, como la asistencia y la participación».</p>
+  <h3>Datos y metodología</h3>
+  <p>«Trabajamos con el dataset público xAPI-Edu-Data, que contiene 480 registros. Realizamos la extracción y transformación con Power Query, organizamos los datos en un modelo dimensional y construimos medidas DAX para calcular indicadores y comparaciones».</p>
+  <h3>Dashboard</h3>
+  <p>«El tablero tiene cuatro páginas: resumen ejecutivo, desempeño por materia y semestre, comparativas entre grupos y factores de éxito. Los filtros permiten explorar la información por nivel educativo, semestre, género y sección».</p>
+  <h3>Estadística</h3>
+  <p>«Complementamos las visualizaciones con pruebas estadísticas para evaluar diferencias entre grupos. Interpretamos los valores p y el tamaño del efecto, y reconocemos que las asociaciones observadas no prueban causalidad».</p>
+  <h3>Cierre comercial</h3>
+  <p>«EduMetrics demuestra cómo una solución de Business Intelligence puede convertir registros educativos en indicadores comprensibles, detectar señales que merecen seguimiento y apoyar decisiones académicas basadas en datos».</p>
+  <div class="callout success"><b>Frase final:</b> «No se trata solo de mostrar datos, sino de convertirlos en preguntas, hallazgos y decisiones».</div>
+</section>
+
+<section id="glosario">
+  <div class="kicker">Conceptos clave</div>
+  <h2>15. Glosario</h2>
+  <table>
+    <tbody>
+      <tr><th>ETL</th><td>Extract, Transform, Load: extraer, transformar y cargar datos.</td></tr>
+      <tr><th>Power Query</th><td>Herramienta de Power BI para conectar, limpiar y transformar datos; usa el lenguaje M.</td></tr>
+      <tr><th>DAX</th><td>Data Analysis Expressions: lenguaje de fórmulas para medidas y cálculos del modelo.</td></tr>
+      <tr><th>Modelo estrella</th><td>Modelo con una tabla de hechos relacionada con dimensiones descriptivas.</td></tr>
+      <tr><th>KPI</th><td>Indicador clave de desempeño.</td></tr>
+      <tr><th>Contexto de filtro</th><td>Conjunto de filtros que determina qué filas participan en un cálculo DAX.</td></tr>
+      <tr><th>Correlación</th><td>Medida de asociación entre variables; no demuestra causalidad.</td></tr>
+      <tr><th>ANOVA</th><td>Prueba para comparar medias de varios grupos bajo determinados supuestos.</td></tr>
+      <tr><th>Valor p</th><td>Probabilidad, bajo la hipótesis nula y el modelo de prueba, de observar un resultado al menos tan extremo como el obtenido.</td></tr>
+      <tr><th>η²</th><td>Medida de tamaño del efecto que resume la proporción de variabilidad asociada al factor.</td></tr>
+      <tr><th>Proxy</th><td>Indicador aproximado utilizado cuando no se dispone de una medición directa.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Documento elaborado a partir de la estructura del archivo Rendimiento.pbix, la revisión técnica disponible y las capturas del dashboard. Las fórmulas conceptuales se incluyen para explicar el método; no sustituyen la exportación del código exacto de Power Query o DAX.</p>
+</section>
+
+<div class="actions">
+  <button onclick="window.print()">Imprimir / Guardar como PDF</button>
+  <button class="secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})">Volver al inicio ↑</button>
+</div>
+</main>
+</div>
+<footer>EduMetrics · Observatorio Académico · Python · pandas · numpy · scipy · statsmodels · Power BI · DAX · PostgreSQL · Docker · Vercel</footer>
+</body>
+</html>

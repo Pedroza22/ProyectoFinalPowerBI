@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observatorio Académico — Rendimiento Académico</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f0f4f8;
+      color: #1a1a2e;
+    }
+
+    header {
+      background: #0a3d62;
+      color: #ffffff;
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    header .titulo-bloque h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header .titulo-bloque p {
+      font-size: 0.85rem;
+      color: #a8c8e8;
+      margin-top: 4px;
+    }
+
+    header .badge {
+      background: #1e88e5;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+    }
+
+    .info-bar {
+      background: #1565c0;
+      color: #e3f2fd;
+      display: flex;
+      gap: 32px;
+      padding: 10px 40px;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+    }
+
+    .info-bar span strong {
+      color: #ffffff;
+    }
+
+    .contenedor {
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 0 24px;
+    }
+
+    .descripcion {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      border-left: 5px solid #1565c0;
+    }
+
+    .descripcion h2 {
+      font-size: 1.05rem;
+      color: #0a3d62;
+      margin-bottom: 10px;
+    }
+
+    .descripcion p {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #444;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      border-top: 4px solid #1565c0;
+    }
+
+    .kpi .valor {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #0a3d62;
+    }
+
+    .kpi .etiqueta {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kpi.riesgo  { border-top-color: #e53935; }
+    .kpi.medio   { border-top-color: #f9a825; }
+    .kpi.bueno   { border-top-color: #2e7d32; }
+
+    .tablero-wrapper {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .tablero-wrapper iframe {
+      display: block;
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+
+    .paginas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .pagina {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    }
+
+    .pagina .num {
+      display: inline-block;
+      background: #0a3d62;
+      color: #fff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .pagina h3 {
+      font-size: 0.92rem;
+      color: #0a3d62;
+      margin-bottom: 6px;
+    }
+
+    .pagina p {
+      font-size: 0.8rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .supuestos {
+      background: #fff8e1;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border-left: 5px solid #f9a825;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .supuestos h2 {
+      font-size: 0.95rem;
+      color: #e65100;
+      margin-bottom: 10px;
+    }
+
+    .supuestos ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .supuestos ul li {
+      font-size: 0.82rem;
+      color: #555;
+      padding: 3px 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .supuestos ul li::before {
+      content: "⚠";
+      color: #f9a825;
+      flex-shrink: 0;
+    }
+
+    footer {
+      background: #0a3d62;
+      color: #a8c8e8;
+      text-align: center;
+      padding: 18px;
+      font-size: 0.78rem;
+    }
+
+    footer strong {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="titulo-bloque">
+      <h1>📊 Observatorio Académico</h1>
+      <p>Proyecto Final · Evaluación del Rendimiento Académico · xAPI-Edu-Data</p>
+    </div>
+    <div class="badge">Power BI · DAX · Python · PostgreSQL</div>
+  </header>
+
+  <div class="info-bar">
+    <span><strong>Dataset:</strong> xAPI-Edu-Data (Kaggle)</span>
+    <span><strong>Registros:</strong> 480 estudiantes</span>
+    <span><strong>Materias:</strong> 12</span>
+    <span><strong>Modelo:</strong> Esquema estrella · 7 dimensiones</span>
+    <span><strong>Medidas DAX:</strong> 36</span>
+    <span><strong>Validación:</strong> ANOVA · Tukey · Chi²</span>
+  </div>
+
+  <div class="contenedor">
+
+    <!-- Descripción -->
+    <div class="descripcion">
+      <h2>Sobre este tablero</h2>
+      <p>
+        Analiza el rendimiento académico de 480 estudiantes registrados en un sistema de aprendizaje virtual (LMS).
+        Explora cómo la asistencia, la participación en la plataforma, el género, la materia y el nivel educativo
+        se asocian con el desempeño. El tablero tiene cuatro páginas con segmentadores sincronizados y está
+        respaldado por pruebas estadísticas formales (ANOVA, Kruskal-Wallis, chi-cuadrado).
+      </p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi">
+        <div class="valor">480</div>
+        <div class="etiqueta">Estudiantes</div>
+      </div>
+      <div class="kpi">
+        <div class="valor">79,15</div>
+        <div class="etiqueta">Nota promedio</div>
+      </div>
+      <div class="kpi riesgo">
+        <div class="valor">26,5%</div>
+        <div class="etiqueta">Reprobación</div>
+      </div>
+      <div class="kpi medio">
+        <div class="valor">24,2%</div>
+        <div class="etiqueta">Riesgo deserción</div>
+      </div>
+      <div class="kpi bueno">
+        <div class="valor">29,6%</div>
+        <div class="etiqueta">Sobresalientes</div>
+      </div>
+      <div class="kpi bueno">
+        <div class="valor">0,70</div>
+        <div class="etiqueta">Correlación participación</div>
+      </div>
+    </div>
+
+    <!-- Tablero embebido -->
+    <div class="tablero-wrapper">
+      <iframe
+        title="Rendimiento"
+        src="https://app.powerbi.com/view?r=eyJrIjoiMTE0NGRmOWEtMDc2ZS00M2RmLWJjMDYtMzM3MzM1NDI5YzI4IiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9"
+        frameborder="0"
+        allowfullscreen="true">
+      </iframe>
+    </div>
+
+    <!-- Páginas -->
+    <div class="paginas">
+      <div class="pagina">
+        <div class="num">1</div>
+        <h3>Resumen ejecutivo</h3>
+        <p>KPIs globales, distribución de rendimiento y nota por nivel educativo. Segmentadores sincronizados.</p>
+      </div>
+      <div class="pagina">
+        <div class="num">2</div>
+        <h3>Desempeño académico</h3>
+        <p>Matriz materia × semestre, top 10 de reprobación con semáforo y tabla de sobresalientes.</p>
+      </div>
+      <div class="pagina">
+        <div class="num">3</div>
+        <h3>Comparativas entre grupos</h3>
+        <p>Deserción por nivel, nota por género, ranking de programas y distribución por sección.</p>
+      </div>
+      <div class="pagina">
+        <div class="num">4</div>
+        <h3>Factores de éxito</h3>
+        <p>Asistencia vs nota, correlación de participación, actividad por nivel y tabla ANOVA.</p>
+      </div>
+    </div>
+
+    <!-- Supuestos -->
+    <div class="supuestos">
+      <h2>Supuestos metodológicos importantes</h2>
+      <ul>
+        <li>El dataset es de educación escolar. Facultad, programa y cohorte son adaptaciones de etapa, grado y sección.</li>
+        <li>La nota (60 / 80 / 95) es el punto medio de las bandas L/M/H, no una calificación real.</li>
+        <li>El "riesgo de deserción" es un proxy: rendimiento Bajo con 7 o más ausencias.</li>
+        <li>La comparación semestral compara grupos distintos, no la evolución de los mismos estudiantes.</li>
+        <li>Grupos muy pequeños (Grado 05: 3 estudiantes, Sección C: 30) pueden distorsionar rankings.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer>
+    <strong>Proyecto Final · Evaluación del Rendimiento Académico</strong> ·
+    Dataset: xAPI-Edu-Data (Kaggle · aljarah) ·
+    ETL y ANOVA: Python (pandas, scipy, statsmodels) ·
+    BD: PostgreSQL 16 · Docker ·
+    Visualización: Microsoft Power BI
+  </footer>
+
+</body>
+</html>
